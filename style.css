@@ -58,20 +58,12 @@ header {
 .social-links a {
   color: var(--text);
   display: inline-flex;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .social-links a:hover {
   color: #ea6700;
-  animation: wiggle 0.35s ease;
-}
-
-@keyframes wiggle {
-  0%   { transform: rotate(0deg); }
-  25%  { transform: rotate(-12deg); }
-  50%  { transform: rotate(10deg); }
-  75%  { transform: rotate(-6deg); }
-  100% { transform: rotate(0deg); }
+  transform: rotate(12deg);
 }
 
 /* Main */
@@ -92,7 +84,7 @@ main {
 
 .avatar {
   width: 220px;
-  margin-bottom: 0px;
+  margin-bottom: 16px;
 }
 
 .avatar img {
@@ -297,12 +289,12 @@ footer {
   }
 
   .hero {
-    padding: 48px 0 96px;
+    padding: 48px 0 40px;
   }
 
   .avatar {
     width: 180px;
-    margin-bottom: 0;
+    margin-bottom: 16px;
   }
 
   .hero-text h1 {
