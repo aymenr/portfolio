@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap");
+
+/* Ref · Alice Zhao — https://alicezhao.work/
+   Taking: white page, a dot-grid hero with one big two-tone statement, a tiny top bar, a "Selected work ↓" cue,
+   and project rows with a text column on the left and one large rounded image on the right.
+   Adapted: the statement is grey with "B2C experiences" and "EdTech" in black; every card is one wide row, in both orders. */
+:root {
+  --bg: #ffffff;
+  --ink: #0d0d0d;
+  --muted: #8b8b8b;
+  --paper: #f3f3f1;
+  --accent: #2b59ff;
+  --accent-2: #ff5a36;
+  --line: #e8e8e5;
+  --font-display: "Hanken Grotesk", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --font-meta: "Hanken Grotesk", system-ui, sans-serif;
+  --letter-anim: none;
+  --reveal-from: translateY(40px);
+  --maxw: 1480px;
+  --gutter: clamp(16px, 2vw, 28px);
+  --leftcol: 260px;
+  --cgap: clamp(24px, 4vw, 64px);
+}
+
+/* tiny top bar */
+.masthead { padding-block: 6px 10px; align-items: center; }
+.mast-name { font: 500 .85rem var(--font-body); }
+.mast-nav { font: 500 .85rem var(--font-body); gap: 4px 18px; }
+.mast-nav a:hover { text-decoration: none; color: var(--muted); }
+
+/* dot-grid hero */
+.hero { min-height: min(76vh, 720px); align-content: center; isolation: isolate; padding-block: 64px 96px; gap: 14px; }
+.hero::before {
+  content: ""; position: absolute; z-index: -1; inset: 0 calc(var(--gutter) * -1);
+  background-image: radial-gradient(circle, #c9c9c6 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(#000 60%, transparent);
+  mask-image: linear-gradient(#000 60%, transparent);
+  animation: dots-drift 40s linear infinite;
+}
+@keyframes dots-drift { to { background-position: 260px 130px; } }
+.hero-kicker { position: absolute; left: 0; bottom: 28px; text-transform: none; letter-spacing: 0; font: 500 .95rem var(--font-body); color: var(--ink); }
+.hero-kicker::after { content: "↓"; display: inline-block; margin-left: .5em; animation: nudge 1.6s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateY(4px); } }
+.hero-title { font-weight: 600; font-size: clamp(1.7rem, 3.6vw, 3rem); line-height: 1.14; letter-spacing: -.025em; max-width: 32ch; color: var(--muted); }
+.hero-title em { font-style: normal; color: var(--ink); }
+.hero-sub { font-size: 1.05rem; color: var(--muted); }
+.hero-sub a { color: var(--ink); }
+
+/* section heads line up with the row columns */
+.projects { gap: 40px; padding-block: 24px; }
+.section-head { grid-template-columns: minmax(0, var(--leftcol)) minmax(0, 1fr); column-gap: var(--cgap); align-items: baseline; margin-bottom: 36px; }
+.section-mark { display: none; }
+.section-title { font: 600 1.05rem var(--font-body); letter-spacing: -.01em; }
+.section-note { font-size: .95rem; }
+@media (max-width: 760px) { .section-head { grid-template-columns: 1fr; } }
+
+/* one wide row per project: text left, image right */
+.projects .cards { grid-template-columns: 1fr; gap: 80px; }
+.card {
+  grid-template-columns: minmax(0, var(--leftcol)) minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr auto auto auto auto;
+  column-gap: var(--cgap); row-gap: 0;
+}
+.card-body { display: contents; }
+.card-media { grid-column: 2; grid-row: 1 / 4; border-radius: 16px; background: var(--paper); transition: border-radius .5s var(--ease-spring), scale .3s var(--ease); }
+.card:hover .card-media { border-radius: 30px; }
+.card:active .card-media { scale: .985; }
+.card:hover .card-media > img { transform: scale(1.035); }
+.card-meta { grid-column: 1; grid-row: 1; display: grid; gap: 2px; align-content: start; font: 500 .95rem var(--font-body); letter-spacing: 0; text-transform: none; }
+.card-no { display: none; }
+.card-tag { color: var(--ink); font-weight: 600; font-size: 1.1rem; letter-spacing: -.01em; }
+.card-type { color: var(--muted); }
+.card-desc { grid-column: 1; grid-row: 2; margin-top: 22px; font-size: .98rem; line-height: 1.55; align-self: start; }
+.card-title { grid-column: 2; grid-row: 4; margin-top: 18px; font-weight: 600; font-size: clamp(1.3rem, 2.1vw, 1.85rem); letter-spacing: -.02em; }
+.card-stats { grid-column: 2; grid-row: 5; margin-top: 6px; gap: 2px 14px; color: var(--muted); }
+.card-stats b { color: var(--ink); font-weight: 600; }
+.card-cta { grid-column: 2; grid-row: 6; margin-top: 12px; font: 500 .9rem var(--font-body); color: var(--muted); transition: color .2s; }
+.card:hover .card-cta { color: var(--ink); }
+.card-extra { grid-column: 2; grid-row: 7; margin-top: 8px; font: 500 .9rem var(--font-body); }
+.cover { --cv-bg: linear-gradient(135deg, #4a5bd8, #8db6ff 60%, #e9f1ff); --cv-fg: #fff; }
+.cover-sampler { --cv-bg: linear-gradient(135deg, #ff7a45, #ffb36b 55%, #ffe3c2); --cv-fg: #fff; }
+.cover-falsa { --cv-bg: linear-gradient(135deg, #1d1d22, #46405f 70%, #8a7fc4); --cv-fg: #fff; }
+.cover-word { font-weight: 600; }
+
+@media (max-width: 760px) {
+  .card { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 0; }
+  .card > *, .card-body > * { grid-column: 1; grid-row: auto; }
+  .card-media { order: 2; margin-block: 14px 16px; }
+  .card-meta { order: 1; }
+  .card-title { order: 3; margin-top: 0; }
+  .card-desc { order: 4; margin-top: 8px; }
+  .card-stats { order: 5; }
+  .card-cta { order: 6; }
+  .card-extra { order: 7; }
+  .projects .cards { gap: 56px; }
+}
+
+/* about + contact */
+.about-body { grid-template-columns: minmax(0, var(--leftcol)) minmax(0, 1fr); column-gap: var(--cgap); }
+.about-portrait { max-width: 120px; border-radius: 16px; }
+.about-text .lede { font-weight: 600; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.22; }
+@media (max-width: 760px) { .about-body { grid-template-columns: 1fr; } }
+.offscreen-head h3 { font-weight: 600; font-size: 1.05rem; }
+.contact-sheet img { border-radius: 14px; }
+.contact-sheet figure:hover img { transform: scale(1.03); }
+.contact-big { font-weight: 600; letter-spacing: -.035em; }
+.contact-big:hover { color: var(--accent); }

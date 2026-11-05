@@ -31,7 +31,7 @@ body {
   font-family: var(--font-body);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip, not hidden: hidden would make body a scroll container and break position: sticky */
 }
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; }
@@ -92,7 +92,7 @@ ul { list-style: none; }
 /* three own products sit in one row; in the mixed index the first item (Seda) becomes the cover story */
 @media (min-width: 900px) {
   [data-group="made"] .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  html:not([data-v="index"], [data-v="catalogue"], [data-v="sleeve"], [data-v="swiss"], [data-v="editorial"])[data-order="mixed"] .cards > .card:first-child {
+  html:not([data-v="index"], [data-v="catalogue"], [data-v="sleeve"], [data-v="swiss"], [data-v="editorial"], [data-v="ref-alicezhao"], [data-v="ref-anurag"], [data-v="ref-folasewa"], [data-v="ref-azeem"])[data-order="mixed"] .cards > .card:first-child {
     grid-column: 1 / -1; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: center; column-gap: 40px;
   }
 }

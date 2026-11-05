@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&display=swap");
+
+/* Ref · Azeem — https://azeemdesigns.info/
+   Taking: a plain white page, a tiny avatar-and-name bar, one large light headline, small "Currently / Previously" meta,
+   then a dense masonry wall of images, each floating on a soft sky or grass gradient with almost no text.
+   Adapted: every project is a tile on a gradient; titles sit in small type underneath; the image nudges toward the cursor. */
+:root {
+  --bg: #ffffff;
+  --ink: #111111;
+  --muted: #858585;
+  --paper: #f4f4f4;
+  --accent: #2563eb;
+  --accent-2: #ff9a5c;
+  --line: #ececec;
+  --font-display: "Inter Tight", system-ui, sans-serif;
+  --font-body: "Inter Tight", system-ui, sans-serif;
+  --font-meta: "Inter Tight", system-ui, sans-serif;
+  --letter-anim: letter-rise;
+  --reveal-from: translateY(44px) scale(.98);
+  --maxw: 1440px;
+  --gutter: clamp(14px, 1.6vw, 24px);
+  --g-sky: linear-gradient(180deg, #3d8ef0 0%, #8fc8ff 48%, #ffc48a 100%);
+  --g-grass: radial-gradient(45% 32% at 24% 28%, #f3f29c, transparent), radial-gradient(40% 32% at 76% 72%, #d4e27c, transparent), #7c9a34;
+  --g-deep: linear-gradient(180deg, #0b5fc2, #4aa0ea 68%, #ffb987);
+  --g-dusk: linear-gradient(180deg, #5b86e8, #b9a2f0 55%, #ffb8a0);
+}
+
+/* avatar + name, links to the right */
+.masthead { padding-block: 4px 0; align-items: center; }
+.mast-name { font: 500 .85rem var(--font-body); align-items: center; gap: .55em; }
+.mast-name::before { content: ""; width: 24px; height: 24px; border-radius: 50%; background: url("../picture.webp") center / cover; flex: none; }
+.mast-nav { font: 400 .82rem var(--font-body); color: var(--muted); gap: 4px 18px; }
+.mast-nav a:hover { text-decoration: none; color: var(--ink); }
+
+/* one big light headline */
+.hero { padding-block: 64px 44px; gap: 16px; }
+.hero-kicker { font: 400 .82rem var(--font-body); text-transform: none; letter-spacing: 0; }
+.hero-title { font: 400 clamp(2.1rem, 5.2vw, 3.9rem)/1.04 var(--font-display); letter-spacing: -.04em; max-width: 21ch; }
+.hero-title em { font-style: normal; background: linear-gradient(transparent 80%, #bfdcff 80%); }
+.hero-sub { font-size: .9rem; color: var(--muted); max-width: 60ch; }
+.hero-sub a { color: var(--ink); }
+
+.section-head { margin-bottom: 20px; gap: 2px; }
+.section-mark { font: 400 .78rem var(--font-body); text-transform: none; letter-spacing: 0; }
+.section-title { font: 500 1.15rem var(--font-display); letter-spacing: -.02em; }
+.section-note { font-size: .88rem; }
+.projects { gap: 56px; padding-block: 8px; }
+
+/* masonry wall */
+.projects .cards { display: block; column-count: 1; column-gap: 10px; }
+@media (min-width: 620px) { .projects .cards { column-count: 2; } }
+@media (min-width: 960px) { .projects .cards { column-count: 3; } }
+.card { break-inside: avoid; margin-bottom: 14px; gap: 10px; }
+.card-media {
+  aspect-ratio: 4 / 5; background: var(--g-sky); border-radius: 8px; display: grid; place-items: center; padding: 10%;
+  transition: filter .4s;
+}
+.card:nth-child(4n+2) .card-media { aspect-ratio: 1; background: var(--g-grass); }
+.card:nth-child(4n+3) .card-media { aspect-ratio: 3 / 4; background: var(--g-deep); }
+.card:nth-child(4n+4) .card-media { aspect-ratio: 5 / 4; background: var(--g-dusk); }
+.card:hover .card-media { filter: saturate(1.2); }
+.card-media > img {
+  width: 100%; height: auto; border-radius: 7px; box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .4);
+  translate: calc(var(--mx, 0) * 10px) calc(var(--my, 0) * 10px); rotate: calc(var(--mx, 0) * 1.5deg);
+  transition: translate .3s var(--ease), rotate .3s var(--ease), scale .4s var(--ease-spring), box-shadow .4s;
+}
+.card:hover .card-media > img { transform: none; scale: 1.04; box-shadow: 0 24px 44px -12px rgba(0, 0, 0, .45); }
+.card-media .cover { inset: 10%; border-radius: 7px; box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .4); transition: scale .4s var(--ease-spring); }
+.card:hover .card-media .cover { scale: 1.04; }
+.cover { --cv-bg: #fff; --cv-fg: #2563eb; }
+.cover-sampler { --cv-bg: #fff6ee; --cv-fg: #e0571f; }
+.cover-falsa { --cv-bg: #111; --cv-fg: #fff; }
+.cover-word { font: 500 .85rem var(--font-body); }
+.card-body { padding: 0 4px 10px; gap: 4px; }
+.card-meta { font: 400 .72rem var(--font-body); text-transform: none; letter-spacing: 0; }
+.card-no { display: none; }
+.card-tag { color: var(--ink); }
+.card-type::before { content: "· "; }
+.card-title { font: 500 1.1rem/1.2 var(--font-display); letter-spacing: -.02em; }
+.card-desc { font-size: .85rem; color: #555; }
+.card-stats { font-size: .8rem; }
+.card-cta { font: 500 .78rem var(--font-body); color: var(--accent); }
+.card-extra { font: 500 .78rem var(--font-body); }
+
+.about-body { grid-template-columns: minmax(0, 150px) minmax(0, 1fr); }
+.about-portrait { border-radius: 8px; }
+.about-text .lede { font: 400 1.6rem/1.2 var(--font-display); letter-spacing: -.03em; }
+.offscreen-head h3 { font: 500 1.15rem var(--font-display); }
+.offscreen-links a { color: var(--muted); }
+.contact-sheet img { border-radius: 8px; }
+.contact-sheet figure:hover img { transform: translateY(-4px); }
+.contact-big { font-weight: 400; letter-spacing: -.045em; }
+.contact-big:hover { color: var(--accent); }

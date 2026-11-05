@@ -88,6 +88,13 @@ const VARIANTS = [
   { id: 'soft', name: 'Soft Studio', blurb: 'Not print. Warm, rounded, friendly, closest to your current site.', fonts: 'Fraunces and Figtree' },
   { id: 'night', name: 'Night Session', blurb: 'Not print. Dark studio, mono type, ticker, glowing hover.', fonts: 'Big Shoulders Display and JetBrains Mono' },
   { id: 'sleeve', name: 'Record Sleeves', blurb: 'Each project is an LP sleeve. Hover to slide the record out.', fonts: 'Shrikhand and Rubik' },
+  { id: 'ref-alicezhao', name: 'Ref · Alice Zhao', blurb: 'Dot-grid hero, grey-and-black statement, wide rows: text left, big rounded image right.', fonts: 'Hanken Grotesk' },
+  { id: 'ref-chiquach', name: 'Ref · Chi Quach', blurb: 'Grey desk, glossy ID card hero with a pin, paper prints, tab dock at the bottom.', fonts: 'Instrument Serif, DM Mono and DM Sans' },
+  { id: 'ref-astapable', name: 'Ref · Astapable', blurb: 'Floating bar with a dark pill, big bottom-left name, code-comment headings, light and dark tiles.', fonts: 'Instrument Sans' },
+  { id: 'ref-anurag', name: 'Ref · Anurag', blurb: 'Dashed column, pinned intro on the left, red serif, mono text, red labels on images.', fonts: 'Instrument Serif and Geist Mono' },
+  { id: 'ref-nelli', name: 'Ref · Nelli', blurb: 'Narrow white page, pill tabs, soft grey tiles that hold one image like a book on a shelf.', fonts: 'Newsreader and Inter' },
+  { id: 'ref-folasewa', name: 'Ref · Folasewa', blurb: 'Dark page, pill nav, bold serif with coloured words, folder-shaped project cards.', fonts: 'Merriweather and DM Sans' },
+  { id: 'ref-azeem', name: 'Ref · Azeem', blurb: 'Plain white, one light headline, masonry of images floating on sky and grass gradients.', fonts: 'Inter Tight' },
 ];
 
 /* ---------- covers for projects without thumbnails (session 2 will replace these) ---------- */
@@ -266,7 +273,7 @@ function observeReveals() {
     const r = el.getBoundingClientRect();
     // Only hide things that start below the fold, so the first screen is complete at rest
     if (r.top > vh * 0.9) { el.classList.add('pre'); el.classList.remove('in'); io.observe(el); }
-    else el.classList.add('in');
+    else { el.classList.remove('pre'); el.classList.add('in'); }
   });
 }
 

@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500&display=swap");
+
+/* Ref · Anurag — https://anuraaaggxdesign.framer.website/
+   Taking: a narrow bordered column with dashed rules, a sticky intro on the left and a long project list on the right,
+   red condensed serif headings, mono body text, grey tag chips, and a red label sitting on the corner of each image.
+   Adapted: the intro (hero) stays pinned while the projects and about scroll past; images sharpen as they arrive. */
+:root {
+  --bg: #ffffff;
+  --ink: #141414;
+  --muted: #7a7a7a;
+  --paper: #f3f3f3;
+  --accent: #ee1d0f;
+  --accent-2: #141414;
+  --line: #dcdcdc;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Geist Mono", ui-monospace, monospace;
+  --font-meta: "Geist Mono", ui-monospace, monospace;
+  --letter-anim: letter-rise;
+  --reveal-from: translateY(30px);
+  --maxw: 1100px;
+}
+body { font-size: .9rem; }
+
+/* two columns inside a dashed column frame */
+.page {
+  max-width: var(--maxw); border-inline: 1px dashed var(--line); padding-inline: 0; padding-block: 0 48px;
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); grid-template-rows: auto auto auto auto;
+}
+.masthead { grid-column: 1 / -1; grid-row: 1; padding: 14px clamp(16px, 3vw, 36px); border-bottom: 1px dashed var(--line); align-items: center; }
+.mast-name { font: 400 1.5rem var(--font-display); color: var(--accent); letter-spacing: -.01em; }
+.mast-nav { font: 400 .78rem var(--font-meta); text-transform: lowercase; gap: 4px 14px; }
+.mast-nav a::before { content: "{ "; color: var(--accent); }
+.mast-nav a::after { content: " }"; color: var(--accent); }
+.mast-nav a:hover { text-decoration: none; color: var(--accent); }
+.hero { grid-column: 1; grid-row: 2 / span 2; position: sticky; top: 0; align-self: start; padding: 28px clamp(16px, 2.4vw, 32px) 28px clamp(16px, 3vw, 36px); gap: 16px; align-content: start; }
+.marquee { display: none; }
+.projects { grid-column: 2; grid-row: 2; border-left: 1px dashed var(--line); padding: 28px clamp(16px, 3vw, 40px); gap: 56px; }
+.about { grid-column: 2; grid-row: 3; border-left: 1px dashed var(--line); padding: 48px clamp(16px, 3vw, 40px) 24px; }
+.contact { grid-column: 1 / -1; grid-row: 4; border-top: 1px dashed var(--line); padding: 56px clamp(16px, 3vw, 36px) 16px; margin-top: 24px; }
+@media (max-width: 899px) {
+  .page { display: block; border-inline: 0; padding-inline: var(--gutter); }
+  .masthead, .projects, .about, .contact { padding-inline: 0; border-left: 0; }
+  .hero { position: static; padding-inline: 0; padding-block: 28px 8px; }
+}
+
+/* intro */
+.hero-portrait { display: block; order: -1; width: 56px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: var(--accent); }
+.hero-portrait img { filter: grayscale(1) contrast(1.25); mix-blend-mode: multiply; }
+.hero-portrait figcaption { display: none; }
+.hero-kicker { font: 400 .75rem var(--font-meta); text-transform: lowercase; letter-spacing: 0; color: var(--muted); }
+.hero-kicker::before { content: "[··] "; color: var(--accent); }
+.hero-title { font: 400 clamp(1.7rem, 2.7vw, 2.3rem)/1.02 var(--font-display); letter-spacing: -.015em; color: var(--accent); max-width: none; border-top: 1px dashed var(--line); padding-top: 16px; }
+.hero-title em { color: var(--ink); font-style: italic; }
+.hero-sub { font-size: .82rem; border-top: 1px dashed var(--line); padding-top: 16px; }
+.hero-sub::after { content: " (1)"; color: var(--accent); font: italic 1rem var(--font-display); }
+.hero-sub a { color: var(--accent); }
+
+/* right column */
+.section-head { margin-bottom: 36px; gap: 8px; }
+.section-mark { font: 400 .72rem var(--font-meta); color: var(--accent); text-transform: lowercase; letter-spacing: 0; }
+.section-mark::before { content: "( "; } .section-mark::after { content: " )"; }
+.section-title { font: 400 clamp(2rem, 4vw, 3rem)/1 var(--font-display); letter-spacing: -.015em; }
+.section-note { font-size: .8rem; }
+.projects .cards { grid-template-columns: 1fr; gap: 64px; }
+.card { gap: 0; }
+.card-body { display: grid; gap: 14px; padding-top: 14px; }
+.card-media { border-radius: 2px; background: var(--paper); }
+.card-media > img { transition: transform .8s var(--ease), filter .9s var(--ease); }
+.reveal.pre .card-media { filter: blur(10px); }
+.card-media { transition: filter .9s var(--ease); }
+[data-motion="off"] .reveal.pre .card-media { filter: none; }
+.card:hover .card-media > img { transform: scale(1.03); }
+.card-title { order: -1; position: relative; z-index: 2; margin: -34px 0 0 12px; justify-self: start; max-width: calc(100% - 24px); font: 400 clamp(1.1rem, 1.7vw, 1.4rem)/1.5 var(--font-display); }
+.card-link { background: var(--accent); color: #fff; padding: 3px 12px; box-decoration-break: clone; -webkit-box-decoration-break: clone; transition: padding .3s var(--ease-spring); }
+.card:hover .card-link { padding-inline: 18px; }
+.card-desc { font-size: .8rem; line-height: 1.65; }
+.card-meta { order: 5; gap: 8px; text-transform: none; letter-spacing: 0; font: 400 .74rem var(--font-meta); }
+.card-no { display: none; }
+.card-tag, .card-type { background: #f0f0f0; color: var(--ink); padding: 5px 10px; border-radius: 3px; }
+.card-stats { font-size: .78rem; gap: 4px 14px; }
+.card-stats b { color: var(--accent); }
+.card-cta { order: 6; font: 400 .74rem var(--font-meta); color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.card-extra { order: 7; font: 400 .74rem var(--font-meta); }
+.card-extra a { color: var(--accent); }
+.cover { --cv-bg: linear-gradient(135deg, #c96a3c, #e9a766 55%, #3b5f8a); --cv-fg: #fff7ea; }
+.cover-sampler { --cv-bg: linear-gradient(135deg, #1e3a6e, #5f8ad0 60%, #d9b27c); --cv-fg: #fff; }
+.cover-falsa { --cv-bg: linear-gradient(135deg, #2a1a14, #7a3b22 70%, #d28a4e); --cv-fg: #fff3e3; }
+.cover-word { font-family: var(--font-display); font-size: 1.3rem; }
+
+.about-body { grid-template-columns: 1fr; gap: 16px; }
+.about-portrait { max-width: 88px; border-radius: 50%; background: var(--accent); aspect-ratio: 1; }
+.about-portrait img { filter: grayscale(1) contrast(1.25); mix-blend-mode: multiply; }
+.about-text { font-size: .84rem; }
+.about-text .lede { font: 400 1.7rem/1.1 var(--font-display); color: var(--accent); }
+.ink-link { color: var(--accent); }
+.offscreen-head h3 { font: 400 1.7rem var(--font-display); }
+.offscreen-links a:hover { color: var(--accent); }
+.contact-sheet img { border-radius: 2px; filter: grayscale(.4); transition: filter .4s, transform .5s var(--ease); }
+.contact-sheet figure:hover img { filter: none; transform: translateY(-4px); }
+.contact-big { font: 400 clamp(1.6rem, 5vw, 3.6rem)/1 var(--font-display); color: var(--accent); }
+.contact-big:hover { color: var(--ink); }
+.contact-links a { color: var(--accent); }
+.colophon { color: var(--muted); }

@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,700;1,900&family=DM+Sans:wght@400;500;600&display=swap");
+
+/* Ref · Folasewa — https://folasewaogunsola.framer.website/
+   Taking: a dark page with a floating pill nav, a centred bold serif headline with coloured key phrases,
+   and project cards shaped like folders: a pastel sleeve with the image, a saturated folder front with a tab for the tag.
+   Adapted: the two "em" phrases take pink and green; the folder front slides up when you hover. */
+:root {
+  --bg: #131313;
+  --ink: #f6f0e3;
+  --muted: #9b9b96;
+  --paper: #1d1d1d;
+  --accent: #f7a8ff;
+  --accent-2: #a8f0a0;
+  --line: #2a2a2a;
+  --font-display: "Merriweather", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-meta: "DM Sans", system-ui, sans-serif;
+  --letter-anim: letter-drop;
+  --reveal-from: translateY(40px) scale(.97);
+  --maxw: 1120px;
+  color-scheme: dark;
+}
+
+/* pill nav */
+.masthead {
+  position: sticky; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 40; align-items: center; background: #050505; border: 1px solid #262626; border-radius: 99px;
+  padding: 9px 12px 9px 26px;
+}
+.mast-name { font: italic 900 1.35rem var(--font-display); }
+.mast-nav { font: 500 .88rem var(--font-body); gap: 2px; align-items: center; }
+.mast-nav a { padding: 8px 12px; border-radius: 99px; color: #d9d6cd; transition: background .2s, translate .25s var(--ease-spring); }
+.mast-nav a:hover { text-decoration: none; background: #242424; }
+.mast-nav a[href="#about"] { border: 1px solid #d9d6cd; margin-left: 6px; }
+.mast-nav a[href="#contact"] { background: #fff3dc; color: #111; padding: 9px 18px; font-weight: 600; }
+.mast-nav a[href="#contact"]:hover { background: #fff; translate: 0 -2px; }
+@media (max-width: 760px) { .masthead { border-radius: 24px; padding: 12px 18px; position: static; } .mast-nav a { padding: 6px 9px; } }
+
+/* hero */
+.hero { justify-items: center; text-align: center; padding-block: 72px 80px; gap: 18px; }
+.hero-portrait { display: none; }
+.hero-kicker { display: inline-flex; align-items: center; gap: 8px; font: 500 .85rem var(--font-body); text-transform: none; letter-spacing: 0; color: var(--ink); background: #1f1f1f; padding: 5px 14px 5px 6px; border-radius: 99px; }
+.hero-kicker::before { content: ""; width: 24px; height: 24px; border-radius: 50%; background: url("../picture.webp") center / cover; }
+.hero-title { font: 700 clamp(1.9rem, 4.6vw, 3.5rem)/1.2 var(--font-display); max-width: 20ch; }
+.hero-title em { font-style: normal; }
+.hero-title em:nth-of-type(1) { color: var(--accent); }
+.hero-title em:nth-of-type(2) { color: var(--accent-2); }
+.hero-sub { color: var(--muted); max-width: 56ch; }
+.hero-sub a { color: var(--ink); }
+
+.section-head { justify-items: center; text-align: center; margin-bottom: 32px; }
+.section-mark { font: 600 .72rem var(--font-body); color: #ffb870; border: 1px solid #3a2f22; padding: 3px 12px; border-radius: 99px; }
+.section-title { font: 700 clamp(1.8rem, 3.6vw, 2.6rem) var(--font-display); }
+
+/* folder cards */
+@media (min-width: 900px) {
+  .projects .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [data-group="made"] .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  [data-order="mixed"] .cards > .card:first-child { grid-column: 1 / -1; }
+  [data-order="mixed"] .cards > .card:first-child .card-media { aspect-ratio: 21 / 8; }
+}
+.cards { gap: 24px; }
+.card {
+  --d: calc(var(--i, 0) % 4 * 90ms);
+  --p: #dde5ff; --f: #3b78e0;
+  gap: 0; background: var(--p); border-radius: 30px; padding: 14px 14px 14px;
+  transition: opacity .8s var(--ease), transform .8s var(--ease), translate .45s var(--ease-spring);
+  transition-delay: var(--d), var(--d), 0s;
+}
+.card:nth-child(4n+2) { --p: #dfe3ff; --f: #2f3f9e; }
+.card:nth-child(4n+3) { --p: #f1ffdc; --f: #4aa31f; }
+.card:nth-child(4n+4) { --p: #ebe6ff; --f: #3c3f78; }
+.card:hover { translate: 0 -6px; }
+.card-media { aspect-ratio: 16 / 9; border-radius: 18px; background: transparent; }
+.card-media > img { object-position: top; }
+.card:hover .card-media > img { transform: scale(1.04); }
+.card-body {
+  position: relative; background: var(--f); border-radius: 24px; padding: 26px 24px 24px; margin-top: 30px; gap: 10px; color: #fff;
+  transition: translate .5s var(--ease-spring); --muted: rgba(255, 255, 255, .72); --ink: #fff;
+}
+.card:hover .card-body { translate: 0 -12px; }
+.card-meta {
+  position: absolute; left: 0; top: -26px; height: 26px; background: var(--f); border-radius: 18px 18px 0 0; padding: 7px 22px 0; flex-wrap: nowrap; gap: 8px;
+  font: 500 .66rem var(--font-body); letter-spacing: .08em; color: #fff; white-space: nowrap;
+}
+.card-no { display: none; }
+.card-meta > span { color: #fff; }
+.card-type::before { content: "· "; }
+.card-title { font: 700 1.3rem/1.3 var(--font-display); }
+.card-desc { font-size: .93rem; color: rgba(255, 255, 255, .85); }
+.card-stats { gap: 4px 20px; font-size: .84rem; }
+.card-cta { font: 600 .84rem var(--font-body); }
+.card-extra a:hover { color: #fff3dc; }
+.cover { --cv-bg: color-mix(in srgb, var(--f) 20%, #fff); --cv-fg: var(--f); }
+.cover-word { font: 700 1rem var(--font-display); }
+
+.about-body { background: var(--paper); border-radius: 28px; padding: 28px; }
+.about-portrait { border-radius: 20px; }
+.about-text .lede { font: 700 1.45rem/1.3 var(--font-display); }
+.ink-link { color: var(--accent); }
+.offscreen-head h3 { font: 700 1.5rem var(--font-display); }
+.offscreen-links a { border: 1px solid #333; padding: 6px 14px; border-radius: 99px; display: inline-block; transition: background .2s; }
+.offscreen-links a:hover { background: #242424; color: var(--ink); }
+.contact-sheet img { border-radius: 16px; }
+.contact-sheet figure:hover img { transform: translateY(-5px); }
+
+.contact { justify-items: center; text-align: center; }
+.contact-big { font-weight: 900; }
+.contact-big:hover { color: var(--accent); }
+.contact-links { justify-content: center; }
+.contact-links a { border: 1px solid #3a3a3a; padding: 8px 16px; border-radius: 99px; text-decoration: none; transition: background .2s, translate .25s var(--ease-spring); }
+.contact-links a:hover { background: #fff3dc; color: #111; translate: 0 -2px; }

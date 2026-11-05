@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap");
+
+/* Ref · Astapable — https://astapable.com/
+   Taking: a clean off-white page, a floating top bar with a small role chip and one dark pill button,
+   a centred hero image above a big bottom-left name, code-comment section headings in pale grey,
+   and big two-up tiles alternating light and dark.
+   Adapted: the portrait stands in for the 3D illustration; "Contact" becomes the dark pill; tiles press in when clicked. */
+:root {
+  --bg: #fbfbfb;
+  --ink: #111113;
+  --muted: #86868e;
+  --paper: #eff0f6;
+  --accent: #111113;
+  --accent-2: #7c5cff;
+  --line: #e6e6ea;
+  --font-display: "Instrument Sans", system-ui, sans-serif;
+  --font-body: "Instrument Sans", system-ui, sans-serif;
+  --font-meta: "Instrument Sans", system-ui, sans-serif;
+  --letter-anim: letter-rise;
+  --reveal-from: translateY(52px) scale(.98);
+  --maxw: 1360px;
+}
+:focus-visible { outline-color: var(--accent-2); }
+
+/* floating top bar */
+.masthead {
+  position: sticky; top: 0; z-index: 30; margin-inline: calc(var(--gutter) * -1); padding: 12px var(--gutter);
+  align-items: center; background: rgba(251, 251, 251, .8); backdrop-filter: blur(14px);
+}
+.mast-name { font: 700 .98rem var(--font-body); align-items: center; letter-spacing: -.01em; }
+.mast-name::after { content: "Product designer"; font: 500 .72rem var(--font-body); background: #ebebee; padding: 5px 9px; border-radius: 6px; margin-left: .7em; }
+.mast-nav { font: 500 .9rem var(--font-body); gap: 2px; margin-left: auto; align-items: center; }
+.mast-nav a { padding: 8px 12px; border-radius: 8px; transition: background .2s, translate .25s var(--ease-spring); }
+.mast-nav a:hover { text-decoration: none; background: #ededf0; }
+.mast-nav a[href="#contact"] { background: var(--ink); color: #fff; padding: 9px 16px; margin-left: 6px; }
+.mast-nav a[href="#contact"]:hover { background: #000; translate: 0 -2px; }
+@media (max-width: 760px) { .mast-name::after { display: none; } .masthead { position: static; } }
+
+/* hero: portrait up top, big name bottom-left */
+.hero { min-height: min(88vh, 780px); align-content: end; justify-items: start; gap: 14px; padding-block: 24px 56px; }
+.hero-portrait {
+  display: block; position: absolute; top: 20px; left: 50%; translate: -50% 0; width: clamp(170px, 26vw, 300px); aspect-ratio: 1; border-radius: 26px; overflow: hidden;
+  box-shadow: 0 34px 60px -24px rgba(17, 17, 19, .35); transition: rotate .5s var(--ease-spring), scale .5s var(--ease-spring);
+}
+.hero-portrait:hover { rotate: -3deg; scale: 1.04; }
+.hero-portrait figcaption { display: none; }
+.hero-kicker { font: 500 .85rem var(--font-body); text-transform: none; letter-spacing: 0; background: #ebebee; color: var(--ink); padding: 5px 11px; border-radius: 6px; }
+.hero-title { font-weight: 600; font-size: clamp(2.1rem, 4.8vw, 3.9rem); line-height: 1; letter-spacing: -.04em; max-width: 21ch; }
+.hero-title em { font-style: normal; background: linear-gradient(transparent 64%, #dcd3ff 64%); }
+.hero-sub { font-size: 1.05rem; color: var(--muted); }
+.hero-sub a { color: var(--ink); }
+@media (max-width: 700px) {
+  .hero { min-height: 0; }
+  .hero-portrait { position: static; translate: none; order: -1; width: 180px; margin-bottom: 8px; }
+}
+
+/* code-comment headings */
+.section-head { justify-items: center; text-align: center; margin-bottom: 40px; }
+.section-mark { display: none; }
+.section-title { font-weight: 700; font-size: clamp(1.9rem, 4.4vw, 3.2rem); letter-spacing: -.03em; color: #c4c4cc; transition: color .4s; }
+.section-title::before { content: "/* "; } .section-title::after { content: " */"; }
+.group:hover .section-title { color: #9a9aa4; }
+.section-note { font-size: .98rem; }
+
+/* tiles */
+.cards { gap: 16px; }
+.card {
+  --d: calc(var(--i, 0) % 4 * 90ms);
+  gap: 0; background: linear-gradient(160deg, #eef0ff, #f4eeff); border-radius: 14px; overflow: hidden;
+  transition: opacity .8s var(--ease), transform .8s var(--ease), translate .4s var(--ease-spring), scale .25s var(--ease), box-shadow .4s;
+  transition-delay: var(--d), var(--d), 0s, 0s, 0s;
+}
+.card:nth-child(2n) { --ink: #fff; --muted: #a4a6b0; color: #fff; background: #17181c; }
+.card:hover { translate: 0 -6px; box-shadow: 0 30px 50px -26px rgba(17, 17, 19, .45); }
+.card:active { scale: .985; }
+.card-media { border-radius: 0; }
+.card:hover .card-media > img { transform: scale(1.04); }
+.card-body { padding: 22px 24px 26px; gap: 10px; }
+.card-meta { font: 500 .78rem var(--font-body); text-transform: none; letter-spacing: 0; }
+.card-no { display: none; }
+.card-tag { color: var(--ink); }
+.card-type::before { content: "·"; margin-right: 10px; }
+.card-title { font-weight: 600; font-size: clamp(1.4rem, 2.2vw, 1.9rem); letter-spacing: -.03em; }
+.card-desc { font-size: .98rem; color: color-mix(in srgb, var(--ink) 78%, transparent); }
+.card-stats li { border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); padding: 3px 11px; border-radius: 6px; font-size: .84rem; }
+.card-cta { font: 600 .88rem var(--font-body); }
+.card-extra a:hover { color: var(--accent-2); }
+.cover { --cv-bg: linear-gradient(150deg, #ddd8ff, #f6e9ff); --cv-fg: #5b3fd6; }
+.cover-sampler { --cv-bg: linear-gradient(150deg, #ffe4cf, #ffd0e0); --cv-fg: #c2431f; }
+.cover-falsa { --cv-bg: #0c0c0e; --cv-fg: #fff; }
+.cover-word { font-weight: 600; }
+
+.about-portrait { border-radius: 18px; }
+.about-text .lede { font-weight: 600; font-size: 1.6rem; letter-spacing: -.03em; line-height: 1.15; }
+.offscreen-head h3 { font-weight: 700; font-size: 1.4rem; letter-spacing: -.02em; }
+.offscreen-links a { border: 1px solid var(--line); padding: 6px 12px; border-radius: 8px; display: inline-block; text-decoration: none; transition: background .2s, color .2s; }
+.offscreen-links a:hover { background: var(--ink); color: #fff; }
+.contact-sheet img { border-radius: 10px; }
+.contact-sheet figure:hover img { transform: translateY(-4px); }
+.contact-big { font-weight: 600; letter-spacing: -.04em; }
+.contact-links a { border: 1px solid var(--line); padding: 8px 14px; border-radius: 8px; text-decoration: none; transition: background .2s, color .2s, translate .25s var(--ease-spring); }
+.contact-links a:hover { background: var(--ink); color: #fff; translate: 0 -2px; }
