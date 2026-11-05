@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Kalam:wght@300;400;700&family=Caveat:wght@500;700&display=swap");
+
+/* 4 · SKETCHBOOK — a designer's working notebook.
+   Layout: graph paper, marker headings, sticky-note metrics, doodles that draw themselves. */
+:root {
+  --bg: #fbfaf4;
+  --ink: #1f2430;
+  --muted: #5b6070;
+  --paper: #ffffff;
+  --accent: #ff5a36;        /* orange marker */
+  --accent-2: #2f6fe4;      /* blue biro */
+  --hl: #fff27a;            /* highlighter */
+  --note: #ffe99a;
+  --font-display: "Permanent Marker", "Marker Felt", cursive;
+  --font-body: "Kalam", "Comic Sans MS", cursive;
+  --font-meta: "Caveat", "Bradley Hand", cursive;
+  --letter-anim: letter-drop;
+  --reveal-from: translateY(20px) rotate(-2deg);
+}
+body {
+  font-size: 1.08rem;
+  background-image:
+    linear-gradient(rgba(47, 111, 228, .09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 111, 228, .09) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.mast-name { font-size: 2rem; color: var(--ink); }
+.mast-nav { font-size: 1.35rem; font-weight: 700; }
+.mast-nav a:hover { color: var(--accent); text-decoration: underline wavy var(--accent); }
+
+.hero { grid-template-columns: minmax(0, 1fr) minmax(0, 260px); column-gap: 56px; padding-block: 48px 88px; }
+.hero > * { grid-column: 1; }
+.hero-kicker { font: 700 1.6rem var(--font-meta); text-transform: none; letter-spacing: 0; color: var(--accent-2); position: relative; width: fit-content; }
+.hero-title { font-size: clamp(2rem, 4.8vw, 3.8rem); line-height: 1.12; max-width: 18ch; }
+.hero-title em { font-style: normal; background: linear-gradient(104deg, transparent .5%, var(--hl) 2%, var(--hl) 97%, transparent 99%) 0 85% / 100% 55% no-repeat; }
+.loaded .hero-title em { animation: hl-in 1s var(--ease) .6s both; }
+@keyframes hl-in { from { background-size: 0 55%; } }
+.hero-sub { font-size: 1.2rem; }
+.hero-portrait { display: grid; gap: 4px; grid-column: 2; grid-row: 1 / span 3; background: var(--paper); padding: 10px 10px 4px; box-shadow: 0 4px 14px rgba(0,0,0,.12); rotate: 3deg; align-self: start; }
+.hero-portrait img { aspect-ratio: 1; }
+.hero-portrait figcaption { font: 700 1.4rem var(--font-meta); color: var(--accent-2); text-align: center; }
+.hero-portrait figcaption::after { content: " :)"; }
+.doodle { display: block; position: absolute; }
+.doodle-circle { width: 250px; left: -26px; top: 26px; color: var(--accent); }
+.doodle-arrow { width: 110px; right: 280px; top: 120px; color: var(--accent-2); rotate: 160deg; scale: 1 -1; }
+.doodle-star { width: 44px; right: 250px; bottom: 40px; color: var(--accent); }
+.loaded .doodle-arrow .draw { animation-delay: 1.1s; }
+.loaded .doodle-star .draw { animation-delay: 1.5s; }
+.sticker-b { display: block; position: absolute; right: -6px; bottom: 6px; background: var(--note); padding: 10px 14px; font: 700 1.4rem var(--font-meta); --rot: 4deg; rotate: 4deg; box-shadow: 0 4px 10px rgba(0,0,0,.12); animation: float 5s ease-in-out infinite; }
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; } .hero-portrait { grid-column: 1; grid-row: auto; max-width: 200px; }
+  .doodle-arrow { display: none; } .doodle-star { right: 20px; bottom: auto; top: 10px; } .sticker-b { bottom: -20px; }
+}
+
+.section-head { position: relative; }
+.section-mark { font: 700 1.4rem var(--font-meta); text-transform: none; letter-spacing: 0; color: var(--accent-2); }
+.section-title { width: fit-content; padding-bottom: 12px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 14' preserveAspectRatio='none'%3E%3Cpath d='M2 9 C 40 2, 70 13, 110 7 S 190 2, 230 8 S 280 11, 298 5' fill='none' stroke='%23ff5a36' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E") 0 100% / 100% 14px no-repeat; }
+.section-note { font-size: 1.05rem; }
+
+.cards { gap: 64px 48px; }
+.card { transition: translate .35s var(--ease-spring), rotate .35s var(--ease-spring); }
+.card:hover { translate: 0 -4px; rotate: -.6deg; }
+.card-media { background: var(--paper); border-radius: 6px; overflow: visible; }
+.card-media > img { border-radius: 4px; }
+.card-media::after { content: ""; position: absolute; inset: -6px; border: 2.5px solid var(--ink); border-radius: 10px 14px 8px 16px; filter: url(#rough); pointer-events: none; }
+.card-meta { font: 700 1.25rem/1.1 var(--font-meta); text-transform: none; letter-spacing: 0; color: var(--accent-2); }
+.card-no::before { content: "#"; }
+.card-title { font-size: 1.6rem; width: fit-content; }
+.card-link { background: linear-gradient(104deg, transparent .5%, var(--hl) 2%, var(--hl) 97%, transparent 99%) 0 85% / 0 50% no-repeat; transition: background-size .5s var(--ease); }
+.card:hover .card-link { background-size: 100% 50%; }
+.card-stats { gap: 12px; margin-top: 4px; }
+.card-stats li { background: var(--note); padding: 8px 12px 6px; rotate: -2deg; box-shadow: 0 3px 8px rgba(0,0,0,.1); font-family: var(--font-meta); font-size: 1.15rem; line-height: 1; transition: rotate .3s var(--ease-spring); }
+.card-stats li:nth-child(even) { rotate: 2.5deg; background: #c6f0d8; }
+.card:hover .card-stats li { rotate: 0deg; }
+.card-stats b { display: block; font: 1.5rem var(--font-display); }
+.card-stats span { color: var(--ink); }
+.card-cta { font: 700 1.3rem var(--font-meta); color: var(--accent); }
+.card-extra { font: 700 1.2rem var(--font-meta); }
+.cover { --cv-bg: #fff4c2; --cv-fg: var(--ink); border-radius: 4px; }
+.cover-sampler { --cv-bg: #dce8ff; }
+.cover-falsa { --cv-bg: #ffe0d6; }
+.cover svg { filter: url(#rough); }
+
+.about-portrait { border-radius: 50% 46% 52% 48%; border: 3px solid var(--ink); filter: url(#rough); }
+.about-text .lede { font-family: var(--font-body); font-weight: 700; }
+.offscreen-head h3 { font-size: 1.6rem; }
+.offscreen-links { font: 700 1.3rem var(--font-meta); }
+.contact-sheet { padding: 12px 4px 20px; gap: 18px; }
+.contact-sheet figure { background: var(--paper); padding: 6px 6px 0; box-shadow: 0 3px 10px rgba(0,0,0,.12); rotate: -1.5deg; }
+.contact-sheet figure:nth-child(even) { rotate: 2deg; }
+.contact-sheet figcaption { font: 700 1.1rem var(--font-meta); text-align: center; }
+.contact-sheet figcaption::before { content: "roll 3 · "; }
+.contact-kicker { font: 700 1.6rem var(--font-meta); text-transform: none; letter-spacing: 0; color: var(--accent-2); }
+.contact-big { width: fit-content; max-width: 100%; }
+.contact-links { font: 700 1.3rem var(--font-meta); }
+.colophon { font-size: 1rem; }

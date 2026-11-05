@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Shrikhand&family=Rubik:ital,wght@0,400;0,500;0,700;1,400&display=swap");
+
+/* 12 · RECORD SLEEVES — a 1970s record shop. Projects are LPs; hover to slide the record out.
+   Layout: square sleeves in crates, sunburst behind the hero, "Side A / Side B" sections. */
+:root {
+  --bg: #f1e4c8;
+  --ink: #2e1d12;
+  --muted: #6e5544;
+  --paper: #fbf3e2;
+  --accent: #e2562a;        /* burnt orange */
+  --accent-2: #2b7a72;      /* teal */
+  --mustard: #e7a823;
+  --line: rgba(46, 29, 18, .2);
+  --font-display: "Shrikhand", "Cooper Black", Georgia, serif;
+  --font-body: "Rubik", system-ui, sans-serif;
+  --font-meta: "Rubik", system-ui, sans-serif;
+  --letter-anim: letter-drop;
+  --reveal-from: translateY(40px) rotate(-3deg);
+}
+.mast-name { font-size: 1.7rem; color: var(--accent); }
+.mast-nav { font: 500 .9rem var(--font-body); }
+.mast-nav a:hover { color: var(--accent); }
+
+.hero { justify-items: center; text-align: center; padding-block: 80px 110px; isolation: isolate; overflow: hidden; border-radius: 0 0 40px 40px; }
+.hero::before {
+  content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 1600px; aspect-ratio: 1; translate: -50% -50%;
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--mustard) 35%, transparent) 0 6deg, transparent 6deg 12deg);
+  -webkit-mask: radial-gradient(closest-side, #000 20%, transparent 70%); mask: radial-gradient(closest-side, #000 20%, transparent 70%);
+  animation: spin 90s linear infinite;
+}
+@keyframes spin { to { rotate: 360deg; } }
+.hero-kicker { font: 500 .9rem var(--font-body); color: var(--accent-2); letter-spacing: .2em; }
+.hero-title { font-weight: 400; font-size: clamp(2.2rem, 5.6vw, 4.4rem); line-height: 1.05; max-width: 18ch; color: var(--ink);
+  text-shadow: 3px 3px 0 var(--mustard), 6px 6px 0 var(--accent); }
+.hero-title em { font-style: normal; color: var(--accent-2); }
+.hero-sub { font-size: 1.1rem; }
+.sticker-a { display: grid; place-items: center; position: absolute; right: 8%; top: 40px; width: 96px; aspect-ratio: 1; border-radius: 50%; background: var(--accent); color: var(--paper); font: 1.2rem var(--font-display); --rot: 12deg; rotate: 12deg; animation: wobble 3.4s ease-in-out infinite; box-shadow: 0 0 0 4px var(--paper), 0 0 0 6px var(--accent); }
+.sticker-b { display: block; position: absolute; left: 7%; bottom: 50px; background: var(--mustard); padding: 6px 12px; border-radius: 6px; font: 700 .85rem var(--font-body); --rot: -8deg; rotate: -8deg; animation: float 4s ease-in-out infinite; }
+@media (max-width: 700px) { .sticker-a { right: 4%; top: 6px; width: 72px; font-size: .95rem; } .sticker-b { left: 4%; bottom: 20px; } }
+
+.section-head { justify-items: center; text-align: center; }
+.section-mark { font-size: 0; }
+.section-mark::after { content: "Side A"; font: 1.4rem var(--font-display); color: var(--accent); letter-spacing: 0; text-transform: none; }
+[data-group="made"] .section-mark::after { content: "Side B"; color: var(--accent-2); }
+.about .section-mark::after { content: "Liner notes"; }
+.section-title { font: 700 clamp(1.8rem, 4vw, 2.8rem) var(--font-body); letter-spacing: -.02em; }
+
+.cards { grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 56px 32px; }
+.card { padding-right: 16%; }
+.card-media { aspect-ratio: 1; z-index: 1; box-shadow: 0 10px 24px rgba(46,29,18,.25); border-radius: 3px; transition: rotate .5s var(--ease-spring); }
+.card-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,.18), transparent 40%), radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,.06)); pointer-events: none; }
+.card-media > img { object-position: 30% 50%; }
+.card:hover .card-media { rotate: -2deg; }
+.card-disc {
+  display: block; position: absolute; top: 3%; left: 3%; width: calc(84% * .94); aspect-ratio: 1; border-radius: 50%; z-index: 0;
+  background:
+    radial-gradient(circle, var(--accent) 0 14%, var(--paper) 14% 15%, var(--accent) 15% 30%, transparent 30%),
+    repeating-radial-gradient(circle, #1a1410 0 2px, #2a211b 2px 3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  transition: translate .7s var(--ease-spring);
+}
+.card-disc::after { content: ""; position: absolute; inset: 0; margin: auto; width: 4%; aspect-ratio: 1; border-radius: 50%; background: var(--bg); }
+.card:nth-child(3n+2) .card-disc { background: radial-gradient(circle, var(--accent-2) 0 14%, var(--paper) 14% 15%, var(--accent-2) 15% 30%, transparent 30%), repeating-radial-gradient(circle, #1a1410 0 2px, #2a211b 2px 3px); }
+.card:nth-child(3n) .card-disc { background: radial-gradient(circle, var(--mustard) 0 14%, var(--paper) 14% 15%, var(--mustard) 15% 30%, transparent 30%), repeating-radial-gradient(circle, #1a1410 0 2px, #2a211b 2px 3px); }
+.card:hover .card-disc { translate: 22% 0; animation: spin 2.5s linear infinite; }
+.card-meta { font: 500 .78rem var(--font-body); color: var(--accent-2); }
+.card-no::before { content: "LP-"; }
+.card-title { font: 700 1.45rem var(--font-body); letter-spacing: -.01em; }
+.card-stats b { font: 1.3rem var(--font-display); color: var(--accent); font-weight: 400; }
+.card-cta { font: 500 .85rem var(--font-body); color: var(--accent); }
+.cover { --cv-bg: var(--accent-2); --cv-fg: var(--paper); }
+.cover-sampler { --cv-bg: var(--mustard); --cv-fg: var(--ink); }
+.cover-falsa { --cv-bg: var(--accent); --cv-fg: var(--paper); }
+.cover svg { width: 75%; }
+.cover-word { font-family: var(--font-display); font-size: 1.5rem; }
+
+.about-body { background: var(--paper); border-radius: 24px; padding: 28px; }
+.about-portrait { border-radius: 50%; border: 6px solid var(--accent); }
+.about-text .lede { font: 500 1.4rem var(--font-body); }
+.offscreen-head h3 { font-size: 1.6rem; color: var(--accent-2); }
+.contact-sheet img { border-radius: 4px; }
+.contact-big { color: var(--accent); }
+.contact-big:hover { color: var(--accent-2); }

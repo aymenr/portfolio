@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap");
+
+/* 8 · SWISS POSTER — International Typographic Style.
+   Layout: hard 12-column grid, flush-left rag, giant numerals, geometric shapes in primaries. */
+:root {
+  --bg: #f5f3ee;
+  --ink: #111111;
+  --muted: #5f5f5c;
+  --paper: #ffffff;
+  --accent: #e3001b;        /* red */
+  --accent-2: #0047bb;      /* blue */
+  --yellow: #ffc800;
+  --line: #111111;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-meta: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --letter-anim: letter-rise;
+  --reveal-from: translateY(60px);
+  --maxw: 1320px;
+}
+body { font-stretch: 100%; }
+.masthead { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; border-top: 8px solid var(--ink); padding-top: 12px; align-items: start; }
+.mast-name { grid-column: 1 / span 6; font-weight: 800; font-size: 1.15rem; line-height: 1.05; display: grid; gap: 0; }
+.mast-nav { grid-column: 7 / -1; font: 500 .9rem var(--font-body); justify-content: space-between; }
+@media (max-width: 700px) { .mast-name, .mast-nav { grid-column: 1 / -1; } .mast-nav { justify-content: start; } }
+
+.hero { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; padding-block: 40px 96px; overflow: hidden; isolation: isolate; }
+.hero::before { content: ""; position: absolute; z-index: -1; right: -6%; top: -30px; width: min(34vw, 400px); aspect-ratio: 1; border-radius: 50%; background: var(--accent); }
+.hero::after { content: ""; position: absolute; z-index: -1; right: 24%; bottom: 40px; width: min(18vw, 200px); height: 26px; background: var(--accent-2); }
+.loaded .hero::before { animation: shape-in 1s var(--ease) both; }
+.loaded .hero::after { animation: bar-in .9s var(--ease) .3s both; transform-origin: left; }
+@keyframes shape-in { from { scale: .2; opacity: 0; } }
+@keyframes bar-in { from { transform: scaleX(0); } }
+.hero-kicker { grid-column: 1 / span 3; grid-row: 1; font-weight: 600; color: var(--ink); text-transform: none; letter-spacing: 0; font-size: .95rem; }
+.hero-title { grid-column: 1 / span 10; font-weight: 800; font-stretch: 75%; font-size: clamp(2.8rem, 8vw, 7.2rem); line-height: .9; letter-spacing: -.035em; max-width: none; }
+.hero-title em { font-style: normal; color: var(--accent-2); }
+.hero-sub { grid-column: 1 / span 5; font-size: 1.15rem; font-weight: 500; }
+@media (max-width: 700px) { .hero-title, .hero-sub, .hero-kicker { grid-column: 1 / -1; } }
+
+.section-head { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; border-top: 3px solid var(--ink); padding-top: 12px; }
+.section-mark { grid-column: 1 / span 3; color: var(--ink); font-weight: 700; text-transform: none; letter-spacing: 0; font-size: .95rem; }
+.section-title { grid-column: 4 / -1; grid-row: 1; font-weight: 800; font-stretch: 80%; letter-spacing: -.03em; font-size: clamp(2.2rem, 5.4vw, 4.6rem); line-height: .92; }
+.section-note { grid-column: 4 / -1; }
+@media (max-width: 700px) { .section-mark, .section-title, .section-note { grid-column: 1 / -1; grid-row: auto; } }
+
+.cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px 16px; }
+@media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
+.card { grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; row-gap: 14px; border-top: 1px solid var(--ink); padding-top: 12px; }
+.card-media { grid-column: 1 / -1; }
+.card-body { grid-column: 1 / -1; grid-template-columns: auto minmax(0, 1fr); column-gap: 18px; }
+.card-meta { display: contents; }
+.card-no { grid-row: 1 / span 5; font: 800 clamp(3.6rem, 7vw, 6rem)/.8 var(--font-display); font-stretch: 62%; letter-spacing: -.04em; color: var(--ink); transition: color .3s; }
+.card:hover .card-no { color: var(--accent); }
+.card:nth-child(3n+2):hover .card-no { color: var(--accent-2); }
+.card-tag, .card-type { display: none; }
+.card-title, .card-desc, .card-stats, .card-cta, .card-extra { grid-column: 2; }
+.card-title { font-weight: 700; font-size: 1.5rem; letter-spacing: -.015em; }
+.card-desc { font-size: .98rem; }
+.card-stats { font-size: .85rem; }
+.card-stats b { font-size: 1.4rem; font-stretch: 75%; font-weight: 800; }
+.card-cta { font-weight: 600; font-size: .85rem; }
+.card-media > img { transition: transform .7s var(--ease), filter .5s; filter: grayscale(.15); }
+.card:hover .card-media > img { transform: scale(1.04); filter: none; }
+.cover { --cv-bg: var(--yellow); --cv-fg: var(--ink); }
+.cover-sampler { --cv-bg: var(--accent-2); --cv-fg: var(--paper); }
+.cover-falsa { --cv-bg: var(--accent); --cv-fg: var(--paper); }
+.cover-word { font-weight: 800; }
+
+.about-body { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; }
+.about-portrait { grid-column: 1 / span 3; aspect-ratio: 1; filter: grayscale(1); background: var(--yellow); }
+.about-portrait img { mix-blend-mode: multiply; }
+.about-text { grid-column: 4 / span 7; }
+.about-text .lede { font-weight: 700; font-size: 1.6rem; letter-spacing: -.02em; line-height: 1.15; }
+@media (max-width: 700px) { .about-portrait { grid-column: 1 / span 6; } .about-text { grid-column: 1 / -1; } }
+.offscreen-head { border-top: 1px solid var(--ink); padding-top: 10px; }
+.offscreen-head h3 { font-weight: 800; font-size: 1.6rem; }
+.offscreen-links { font: 600 .9rem var(--font-body); }
+.contact-sheet { gap: 16px; }
+
+.contact { border-top: 8px solid var(--ink); position: relative; overflow: hidden; isolation: isolate; }
+.contact::after { content: ""; position: absolute; right: 0; bottom: 30px; width: 90px; aspect-ratio: 1; background: var(--yellow); rotate: 45deg; z-index: -1; }
+.contact-kicker { color: var(--ink); font-weight: 700; text-transform: none; letter-spacing: 0; font-size: .95rem; }
+.contact-big { font-weight: 800; font-stretch: 75%; letter-spacing: -.03em; }
+.contact-big:hover { color: var(--accent-2); }

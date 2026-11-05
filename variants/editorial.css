@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+/* 1 · THE QUARTERLY — a 1960s design magazine.
+   Layout: full-width Bodoni masthead, ruled columns, lead feature spans the spread. */
+:root {
+  --bg: #e9e6dc;          /* uncoated newsprint, slightly green-grey */
+  --ink: #141312;
+  --muted: #5d5a52;
+  --paper: #f4f2ea;
+  --accent: #d32a1f;      /* pillar-box red, used like a spot colour */
+  --accent-2: #1f3d8a;
+  --line: #141312;
+  --font-display: "Bodoni Moda", "Didot", Georgia, serif;
+  --font-body: "Newsreader", Georgia, serif;
+  --font-meta: "IBM Plex Mono", ui-monospace, monospace;
+  --letter-anim: letter-rise;
+  --maxw: 1240px;
+}
+body { font-size: 1.06rem; }
+
+.masthead { display: grid; gap: 0; padding-top: 4px; justify-content: stretch; }
+.mast-top {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px;
+  font: 500 .72rem/1 var(--font-meta); letter-spacing: .12em; text-transform: uppercase;
+  border-top: 3px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 0;
+}
+.mast-name {
+  font-weight: 900; font-size: clamp(2.6rem, 11.6vw, 10rem); line-height: .9; letter-spacing: -.045em;
+  padding: 10px 0 .14em; justify-content: space-between; width: 100%; gap: .15em;
+}
+.mast-last { font-style: italic; font-weight: 500; }
+.mast-name:hover .mast-last { color: var(--accent); }
+.mast-nav {
+  justify-content: space-between; border-top: 1px solid var(--line); border-bottom: 3px solid var(--line);
+  padding: 9px 0; text-transform: uppercase; letter-spacing: .12em; font-size: .74rem;
+}
+
+.hero {
+  grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 28px; row-gap: 16px; padding-block: 40px 56px;
+  border-bottom: 1px solid var(--line);
+}
+.hero-kicker { grid-column: 1 / -1; color: var(--accent); font-weight: 500; }
+.hero-title {
+  grid-column: 1 / span 8; grid-row: 2 / span 2; font-weight: 500; font-size: clamp(2.2rem, 5.3vw, 4.6rem);
+  line-height: 1.02; letter-spacing: -.02em; max-width: none;
+}
+.hero-title em { color: var(--accent); font-weight: 400; }
+.hero-sub {
+  grid-column: 9 / -1; grid-row: 3; align-self: end; border-left: 1px solid var(--line); padding-left: 18px;
+  font-style: italic;
+}
+.hero-portrait { display: grid; gap: 6px; grid-column: 9 / -1; grid-row: 2; }
+.hero-portrait img { aspect-ratio: 4 / 5; filter: grayscale(1) contrast(1.1); mix-blend-mode: multiply; }
+.hero-portrait figcaption::before { content: "Fig. 1 — "; }
+@media (max-width: 760px) {
+  .hero-title, .hero-sub, .hero-portrait { grid-column: 1 / -1; grid-row: auto; }
+  .hero-portrait { max-width: 220px; }
+  .hero-sub { border-left: 0; padding-left: 0; }
+}
+
+.section-head { grid-template-columns: auto 1fr; align-items: end; column-gap: 18px; border-top: 3px double var(--line); padding-top: 14px; }
+.section-mark { background: var(--accent); color: var(--paper); padding: 4px 8px 3px; align-self: center; }
+.section-title { font-style: italic; font-weight: 500; font-size: clamp(2rem, 4.5vw, 3.4rem); }
+.section-note { grid-column: 1 / -1; font-style: italic; }
+
+.cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
+.card { padding: 24px 24px 32px; border-bottom: 1px solid var(--line); }
+.card:nth-child(even) { border-left: 1px solid var(--line); }
+@media (min-width: 900px) { [data-group="made"] .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.card:first-child, .card:last-child:nth-child(even) { grid-column: 1 / -1; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px; padding-left: 0; padding-right: 0; }
+.card:last-child:nth-child(even) { border-left: 0 !important; padding-inline: 0; }
+.card:first-child .card-title { font-size: clamp(1.8rem, 3.4vw, 2.8rem); }
+.card:first-child ~ .card:nth-child(even) { border-left: 0; padding-left: 0; }
+.card:first-child ~ .card:nth-child(odd) { border-left: 1px solid var(--line); padding-right: 0; }
+.card-media { background: var(--paper); }
+.card-media > img { filter: saturate(.8) contrast(1.05); }
+.card:hover .card-media > img { transform: scale(1.03); }
+.card-meta { color: var(--ink); }
+.card-no { color: var(--accent); font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0; line-height: .9; }
+.card-no::before { content: "Nº "; font-size: .7em; }
+.card-title { font-weight: 600; letter-spacing: -.01em; }
+.card-link { background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 2px no-repeat; transition: background-size .4s var(--ease); }
+.card:hover .card-link { background-size: 100% 2px; }
+.card-desc::first-letter { font-family: var(--font-display); font-weight: 700; font-size: 3.1em; float: left; line-height: .8; padding: 4px 6px 0 0; color: var(--accent); }
+.card-stats { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 6px 0; font-family: var(--font-meta); font-size: .78rem; }
+.card-stats b { font-family: var(--font-display); font-size: 1.3rem; color: var(--accent); }
+.card-cta { color: var(--accent); }
+@media (max-width: 760px) {
+  .cards { grid-template-columns: 1fr; }
+  .card, .card:first-child, .card:last-child:nth-child(even) { grid-column: auto; grid-template-columns: 1fr; padding-inline: 0; border-left: 0 !important; }
+}
+.cover { --cv-bg: var(--paper); --cv-fg: var(--ink); border: 1px solid var(--line); }
+.cover-sampler { --cv-bg: var(--accent); --cv-fg: var(--paper); }
+.cover-falsa { --cv-bg: var(--ink); --cv-fg: var(--bg); }
+.cover-word { font-style: italic; }
+
+.about { border-top: 3px double var(--line); margin-top: 48px; padding-top: 24px; }
+.about .section-head { border-top: 0; }
+.about-portrait img { filter: grayscale(1); }
+.about-text { columns: 2 220px; column-gap: 32px; column-rule: 1px solid var(--line); display: block; max-width: none; }
+.about-text p + p { margin-top: 12px; }
+.about-text .lede { font-style: italic; }
+.about-text .lede::first-letter { font-family: var(--font-display); font-weight: 900; font-style: normal; font-size: 3.4em; float: left; line-height: .78; padding: 6px 8px 0 0; color: var(--accent); }
+.offscreen-head { border-top: 1px solid var(--line); padding-top: 10px; }
+.offscreen-head h3 { font-style: italic; }
+.contact-sheet { background: var(--ink); padding: 14px; gap: 10px; }
+.contact-sheet img { filter: grayscale(1) contrast(1.1); }
+.contact-sheet figure:hover img { filter: none; }
+.contact-sheet figcaption { color: #e9c46a; }
+
+.contact { border-top: 3px solid var(--line); margin-top: 56px; padding-top: 32px; }
+.contact-big { font-style: italic; font-weight: 500; letter-spacing: -.02em; }
+.colophon { border-top: 1px solid var(--line); padding-top: 10px; }

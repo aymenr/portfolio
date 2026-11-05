@@ -1,0 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Rock+Salt&display=swap");
+
+/* 7 · XEROX PUNK — a photocopied flyer zine. Black toner, fluoro highlighter, handwritten notes.
+   Layout: huge condensed caps, inverted black bars, photos crushed to 1-bit-ish contrast. */
+:root {
+  --bg: #eeede8;
+  --ink: #0b0b0b;
+  --muted: #3c3c3a;
+  --paper: #fbfbf7;
+  --accent: #eaff00;         /* fluoro highlighter */
+  --accent-2: #ff3c00;
+  --line: #0b0b0b;
+  --font-display: "Anton", "Impact", sans-serif;
+  --font-body: "Courier Prime", "Courier New", monospace;
+  --font-meta: "Courier Prime", "Courier New", monospace;
+  --letter-anim: letter-stamp;
+  --reveal-from: translateX(-24px) skewX(-4deg);
+}
+body::after {
+  content: ""; position: fixed; inset: -50%; pointer-events: none; z-index: 60; opacity: .16; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='discrete' tableValues='0 0 .6 1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: toner 1s steps(3) infinite;
+}
+@keyframes toner { 33% { translate: 3% -2%; } 66% { translate: -2% 3%; } }
+[data-motion="off"] body::after { animation: none; }
+
+.masthead { background: var(--ink); color: var(--paper); padding: 10px 14px; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+.mast-name { font-size: 1.6rem; text-transform: uppercase; letter-spacing: .02em; }
+.mast-nav { text-transform: uppercase; font-weight: 700; }
+.mast-nav a:hover { background: var(--accent); color: var(--ink); text-decoration: none; }
+
+.hero { padding-block: 40px 64px; }
+.hero-kicker { font: 1.1rem "Rock Salt", cursive; text-transform: none; letter-spacing: 0; color: var(--ink); rotate: -3deg; width: fit-content; }
+.hero-title { text-transform: uppercase; font-size: clamp(2.6rem, 8vw, 7rem); line-height: 1; max-width: calc(100% - 270px); letter-spacing: -.005em; max-width: none; }
+.hero-title em { font-style: normal; background: linear-gradient(transparent 14%, var(--accent) 14% 92%, transparent 92%); padding: 0 .08em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.hero-sub { font-size: 1.15rem; font-weight: 700; background: var(--paper); border: 2px solid var(--ink); padding: 10px 14px; width: fit-content; max-width: 100%; }
+.hero-portrait { display: block; position: absolute; right: 0; top: 24px; width: clamp(110px, 18vw, 210px); rotate: 6deg; border: 3px solid var(--ink); background: var(--paper); padding: 6px; }
+.hero-portrait img { aspect-ratio: 1; filter: grayscale(1) contrast(2.2) brightness(1.15); }
+.hero-portrait figcaption { display: none; }
+.stamp { display: block; position: absolute; right: clamp(110px, 18vw, 230px); top: 4px; font: 1rem "Rock Salt", cursive; text-transform: lowercase; rotate: -10deg; }
+.stamp::after { content: " ↘"; }
+.doodle-circle { display: block; position: absolute; width: 180px; left: -14px; top: 22px; color: var(--accent-2); }
+@media (max-width: 700px) { .hero-title { max-width: none; } .hero-portrait { position: relative; right: auto; top: auto; justify-self: end; } .stamp { display: none; } }
+
+.marquee { display: block; background: var(--ink); color: var(--accent); font: 2rem/1 var(--font-display); text-transform: uppercase; padding: 10px 0; margin-inline: calc(var(--gutter) * -1); }
+.marquee-track span::after { content: "///"; margin-left: 1.2em; color: var(--paper); }
+
+.section-head { background: var(--ink); color: var(--paper); padding: 14px 18px; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 16px; }
+.section-mark { color: var(--accent); font-weight: 700; }
+.section-title { text-transform: uppercase; font-size: clamp(2rem, 6vw, 4.4rem); line-height: .95; }
+.section-note { grid-column: 1 / -1; color: #bdbdb6; }
+
+.cards { gap: 32px; }
+.card { border: 3px solid var(--ink); background: var(--paper); padding: 12px; box-shadow: 6px 6px 0 var(--ink); transition: translate .2s, box-shadow .2s; }
+.card:hover { translate: -3px -3px; box-shadow: 9px 9px 0 var(--ink); }
+.card-media { border: 2px solid var(--ink); }
+.card-media > img { filter: grayscale(1) contrast(1.9) brightness(1.1); transition: filter .4s; }
+.card:hover .card-media > img { filter: grayscale(0) contrast(1.05); }
+.card-meta { color: var(--ink); font-weight: 700; }
+.card-no { background: var(--ink); color: var(--accent); padding: 0 6px; }
+.card-title { text-transform: uppercase; font-size: 2rem; line-height: .95; }
+.card-link { background: linear-gradient(var(--accent), var(--accent)) 0 80% / 0 45% no-repeat; transition: background-size .35s var(--ease); }
+.card:hover .card-link { background-size: 100% 45%; }
+.card-stats b { font: 1.8rem var(--font-display); }
+.card-stats li:first-child b { background: var(--accent); padding: 0 4px; }
+.card-cta { font-weight: 700; text-transform: uppercase; }
+.cover { --cv-bg: var(--ink); --cv-fg: var(--paper); }
+.cover-sampler { --cv-bg: var(--accent); --cv-fg: var(--ink); }
+.cover-falsa { --cv-bg: var(--paper); --cv-fg: var(--ink); }
+.cover-word { text-transform: uppercase; }
+
+.about .section-head { margin-bottom: 28px; }
+.about-portrait { border: 3px solid var(--ink); }
+.about-portrait img { filter: grayscale(1) contrast(2) brightness(1.1); }
+.about-text .lede { font-family: var(--font-body); font-weight: 700; font-size: 1.3rem; }
+.ink-link { background: var(--accent); text-decoration: none; padding: 0 3px; }
+.offscreen-head h3 { text-transform: uppercase; font-size: 2.2rem; }
+.offscreen-links { text-transform: uppercase; font-weight: 700; }
+.contact-sheet { background: var(--ink); padding: 10px; gap: 8px; }
+.contact-sheet img { filter: grayscale(1) contrast(1.8); }
+.contact-sheet figure:hover img { filter: none; }
+.contact-sheet figcaption { color: var(--accent); }
+
+.contact-kicker { font: 1.3rem "Rock Salt", cursive; text-transform: none; letter-spacing: 0; color: var(--ink); }
+.contact-big { text-transform: uppercase; font-size: clamp(1.6rem, 6.8vw, 5.6rem); }
+.contact-big:hover { color: var(--ink); background: var(--accent); }
+.contact-links { text-transform: uppercase; font-weight: 700; }

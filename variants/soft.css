@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..800,100,1;1,9..144,300..800,100,1&family=Figtree:wght@400;500;600;700&display=swap");
+
+/* 10 · SOFT STUDIO — not print. Warm, rounded, friendly; an evolution of the current site.
+   Layout: centred intro with avatar, soft cards that tilt toward the cursor, drifting colour blobs. */
+:root {
+  --bg: #f7f2ea;
+  --ink: #26221f;
+  --muted: #6f675e;
+  --paper: #ffffff;
+  --accent: #6b4fe0;        /* violet */
+  --accent-2: #ff9f5a;      /* apricot */
+  --butter: #ffe08a;
+  --line: rgba(38, 34, 31, .1);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Figtree", system-ui, sans-serif;
+  --font-meta: "Figtree", system-ui, sans-serif;
+  --letter-anim: letter-rise;
+  --reveal-from: translateY(30px) scale(.97);
+}
+body { position: relative; }
+body::before {
+  content: ""; position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(30% 30% at 20% 20%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+    radial-gradient(28% 28% at 80% 30%, color-mix(in srgb, var(--accent-2) 30%, transparent), transparent 70%),
+    radial-gradient(30% 30% at 50% 85%, color-mix(in srgb, var(--butter) 50%, transparent), transparent 70%);
+  animation: drift 24s ease-in-out infinite alternate;
+}
+@keyframes drift { to { transform: translate(4%, -3%) rotate(6deg); } }
+.page { isolation: isolate; }
+
+.masthead { background: color-mix(in srgb, var(--paper) 70%, transparent); backdrop-filter: blur(12px); border-radius: 99px; padding: 10px 12px 10px 22px; align-items: center; position: sticky; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 20; box-shadow: 0 4px 24px rgba(38, 34, 31, .06); }
+.mast-name { font-size: 1.3rem; font-weight: 600; font-variation-settings: "SOFT" 100, "WONK" 1; }
+.mast-nav { font: 500 .92rem var(--font-body); gap: 4px; }
+.mast-nav a { padding: 6px 12px; border-radius: 99px; transition: background .2s; }
+.mast-nav a:hover { background: var(--butter); text-decoration: none; }
+@media (max-width: 640px) { .masthead { border-radius: 22px; position: static; } }
+
+.hero { justify-items: center; text-align: center; padding-block: 72px 96px; }
+.hero-portrait { display: block; order: -1; width: 112px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 6px var(--paper), 0 10px 30px rgba(0,0,0,.12); }
+.loaded .hero-portrait { animation: pop .8s var(--ease-spring) both; }
+@keyframes pop { from { scale: .4; opacity: 0; } }
+.hero-portrait figcaption { display: none; }
+.hero-kicker { font: 600 .95rem var(--font-body); text-transform: none; letter-spacing: 0; color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); padding: 6px 14px; border-radius: 99px; }
+.hero-title { font-weight: 500; font-variation-settings: "SOFT" 100, "WONK" 1; font-size: clamp(2.1rem, 5vw, 3.9rem); line-height: 1.08; max-width: 19ch; letter-spacing: -.02em; }
+.hero-title em { color: var(--accent); }
+.hero-sub { color: var(--muted); font-size: 1.15rem; }
+.sticker-a { display: block; position: absolute; top: 70px; left: calc(50% + 50px); background: var(--butter); padding: 6px 14px; border-radius: 99px; font: 700 .9rem var(--font-body); --rot: 8deg; rotate: 8deg; animation: wobble 3s ease-in-out infinite; box-shadow: 0 6px 16px rgba(0,0,0,.08); }
+.sticker-a::before { content: "👋 "; }
+
+.section-head { justify-items: center; text-align: center; }
+.section-mark { color: var(--accent); font-weight: 600; }
+.section-title { font-weight: 500; font-variation-settings: "SOFT" 100; letter-spacing: -.02em; }
+
+.cards { gap: 28px; perspective: 1200px; }
+.card {
+  background: var(--paper); border-radius: 28px; padding: 12px 12px 24px; box-shadow: 0 2px 4px rgba(38,34,31,.04), 0 12px 32px rgba(38,34,31,.06);
+  transform-style: preserve-3d; transition: box-shadow .4s, rotate .4s;
+}
+.card.in, .card:not(.pre) { transform: rotateX(calc(var(--my, 0) * -6deg)) rotateY(calc(var(--mx, 0) * 8deg)); transition: transform .25s ease-out, opacity .8s var(--ease), box-shadow .4s; }
+.card:hover { box-shadow: 0 2px 4px rgba(38,34,31,.04), 0 24px 48px rgba(38,34,31,.12); }
+.card-media { border-radius: 20px; }
+.card:hover .card-media > img { transform: scale(1.04); }
+.card-body { padding: 4px 12px 0; }
+.card-meta { font: 600 .8rem var(--font-body); text-transform: none; letter-spacing: 0; gap: 6px; }
+.card-meta > span { background: var(--bg); padding: 3px 10px; border-radius: 99px; }
+.card-no { display: none; }
+.card-title { font-weight: 600; font-variation-settings: "SOFT" 100; font-size: 1.5rem; }
+.card-stats li { background: color-mix(in srgb, var(--accent) 9%, transparent); padding: 4px 12px; border-radius: 99px; }
+.card-stats b { color: var(--accent); }
+.card-cta { font: 600 .92rem var(--font-body); color: var(--accent); }
+.cover { --cv-bg: color-mix(in srgb, var(--accent) 16%, var(--paper)); --cv-fg: var(--accent); border-radius: 20px; }
+.cover-sampler { --cv-bg: color-mix(in srgb, var(--accent-2) 30%, var(--paper)); --cv-fg: #b4521a; }
+.cover-falsa { --cv-bg: var(--butter); --cv-fg: var(--ink); }
+.card:hover .cv-pad.on { animation: pad .5s ease-in-out infinite alternate; animation-delay: calc(var(--p) * -60ms); }
+@keyframes pad { to { opacity: .35; } }
+
+.about-body { background: var(--paper); border-radius: 28px; padding: 28px; box-shadow: 0 12px 32px rgba(38,34,31,.06); }
+.about-portrait { border-radius: 22px; }
+.about-text .lede { font-weight: 500; font-variation-settings: "SOFT" 100; }
+.offscreen-links a { background: var(--paper); padding: 6px 14px; border-radius: 99px; display: inline-block; }
+.contact-sheet img { border-radius: 16px; }
+.contact-sheet figure:hover img { transform: translateY(-4px); }
+
+.contact { justify-items: center; text-align: center; }
+.contact-big { font-weight: 500; font-variation-settings: "SOFT" 100, "WONK" 1; }
+.contact-links { justify-content: center; }
+.contact-links a { background: var(--paper); padding: 8px 16px; border-radius: 99px; text-decoration: none; }
+.contact-links a:hover { background: var(--butter); }
