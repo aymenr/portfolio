@@ -3,11 +3,11 @@
    - PROJECTS: the single source of truth for project cards
    - VARIANTS: the style explorations (one CSS file each in /variants)
    - Dev mode: a floating panel to flip variants, project order and motion.
-     Turn it off for launch by setting DEV_MODE_DEFAULT = false
-     (it can still be opened with ?dev in the URL or Shift+D).
+     Hidden by default; press ~ (or open with ?dev in the URL) to show it.
+     Without the panel the site always shows Alice · Final with masonry.
    ========================================================================== */
 
-const DEV_MODE_DEFAULT = true;
+const DEV_MODE_DEFAULT = false;
 const DEFAULT_VARIANT = 'alice';
 
 const SLIDES = {
@@ -234,12 +234,14 @@ const store = {
   set(k, v) { try { localStorage.setItem('pf:' + k, v); } catch { /* storage unavailable */ } },
 };
 const params = new URLSearchParams(location.search);
+const devOnLoad = params.has('dev') || DEV_MODE_DEFAULT;
+// Stored picks only apply when the dev panel is open on load; everyone else gets the final design.
 const state = {
-  v: params.get('v') || store.get('v') || DEFAULT_VARIANT,
-  order: params.get('order') || store.get('order') || 'work',
-  display: params.get('display') || store.get('display') || 'masonry',
+  v: params.get('v') || (devOnLoad && store.get('v')) || DEFAULT_VARIANT,
+  order: params.get('order') || (devOnLoad && store.get('order')) || 'work',
+  display: params.get('display') || (devOnLoad && store.get('display')) || 'masonry',
   motion: store.get('motion') || 'on',
-  dev: params.has('dev') || store.get('dev') === '1' || DEV_MODE_DEFAULT,
+  dev: devOnLoad,
 };
 if (!VARIANTS.some((x) => x.id === state.v)) state.v = DEFAULT_VARIANT;
 if (state.display !== 'bento') state.display = 'masonry';
@@ -409,7 +411,7 @@ function buildPanel() {
         <button type="button" data-motion="off">Off</button>
         <button type="button" class="dev-replay" data-replay>Replay</button>
       </div>
-      <p class="dev-keys"><kbd>[</kbd> <kbd>]</kbd> flip styles · <kbd>O</kbd> order · <kbd>D</kbd> display · <kbd>M</kbd> motion · <kbd>.</kbd> hide panel</p>
+      <p class="dev-keys"><kbd>[</kbd> <kbd>]</kbd> flip styles · <kbd>O</kbd> order · <kbd>D</kbd> display · <kbd>M</kbd> motion · <kbd>.</kbd> collapse · <kbd>~</kbd> hide</p>
     </div>`;
   document.body.appendChild(panel);
 
@@ -454,9 +456,8 @@ function syncPanel() {
 
 document.addEventListener('keydown', (e) => {
   if (e.target.closest('input, select, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (e.key === 'D' && e.shiftKey) {
+  if (e.key === '~' || e.key === '`') {
     state.dev = !panel;
-    store.set('dev', state.dev ? '1' : '0');
     if (!panel) { buildPanel(); syncPanel(); } else { panel.remove(); panel = null; }
     return;
   }
@@ -473,7 +474,7 @@ document.addEventListener('keydown', (e) => {
    A fresh random set of photographs on every load, and one tile quietly swaps for another photo of the same shape every few seconds.
    The photo list lives in photos-data.js. Tiles are grouped by orientation so a swap never moves the layout. */
 
-const WALL_LAYOUT = [['tall', 'wide', 'std'], ['film', 'std', 'std'], ['wide', 'std', 'music', 'wide']];
+const WALL_LAYOUT = [['tall', 'wide', 'std', 'video'], ['film', 'video', 'std', 'std', 'wide'], ['wide', 'std', 'music', 'video', 'wide']];
 const SLOT_AR = { tall: '4 / 5', std: '4 / 3', wide: '1000 / 524' };
 const WALL_TILES = {
   film: ['Film', 'Watch the video portfolio ↗', 'https://aymenr.notion.site/Aymen-s-Video-Portfolio-7c8f4e0deb8948a0a9ffa06579826dd6'],
@@ -489,17 +490,20 @@ function buildWall() {
   const pools = { tall: [], std: [], wide: [] };
   shuffled(PHOTOS).forEach((p) => pools[photoClass(p)].push(p));
   const used = { tall: 0, std: 0, wide: 0 };
-  let n = 0;
+  const clips = shuffled(VIDEOS.filter((v) => v.kind !== 'link'));   // the three clips that play inline: a random three of them each load
+  let n = 0, c = 0;
   wall.innerHTML = WALL_LAYOUT.map((col) => `<div class="wall-col">${col.map((slot) => {
     if (WALL_TILES[slot]) {
       const [label, text, href] = WALL_TILES[slot];
       return `<a class="wall-tile" href="${href}" target="_blank" rel="noopener"><span>${label}</span><span>${text}</span></a>`;
     }
+    if (slot === 'video') { const v = clips[c++]; return v ? videoFigure(v, `Film · ${v.title}`) : ''; }
     const p = pools[slot][used[slot]++];
     if (!p) return '';
     n += 1;
     return `<figure data-class="${slot}"><div class="wall-ph" style="aspect-ratio:${SLOT_AR[slot]}"><img src="${p.src}" alt="Photograph by Aymen" loading="lazy" decoding="async"></div><figcaption>Photograph ${String(n).padStart(2, '0')}</figcaption></figure>`;
   }).join('')}</div>`).join('');
+  loadVideos(wall);
 }
 
 function rotateWall() {

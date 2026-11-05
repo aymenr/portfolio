@@ -1,5 +1,7 @@
-/* Photographs. Shared by the home page wall (script.js) and photos.html (photos.js).
-   Add a photo: put a web-sized .webp in photographs/web and add a line here (w and h are its pixel size). */
+/* Photographs and videos. Shared by the home page wall (script.js) and photos.html (photos.js).
+   Add a photo: put a web-sized .webp in photographs/web and add a line to PHOTOS (w and h are its pixel size).
+   Videos (crop = the share of the frame height that is picture, so letterbox bars are cropped off): Vimeo and YouTube play inline with no frame and no controls (see video-embed.js). Instagram does not allow
+   a frameless embed, so those are a still that links to the post. */
 const PHOTOS = [
   { src: 'photographs/web/DSC09368.webp', w: 1200, h: 1500 },
   { src: 'photographs/web/DSC09455.webp', w: 1200, h: 1500 },
@@ -17,6 +19,15 @@ const PHOTOS = [
   { src: 'photographs/web/berlin-4.webp', w: 1200, h: 629 },
   { src: 'photographs/web/berlin-5.webp', w: 1200, h: 629 },
   { src: 'photographs/web/torfstr-2.webp', w: 1200, h: 1497 },
+  { src: 'photographs/web/ig-DBHFKVkNX0j.webp', w: 1200, h: 1500 },
+  { src: 'photographs/web/ig-CuDEEI-rTuC.webp', w: 1200, h: 900 },
+  { src: 'photographs/web/ig-CrgCHe5sGFN.webp', w: 1200, h: 799 },
+  { src: 'photographs/web/ig-CcLMiYpNOXZ.webp', w: 1200, h: 676 },
+  { src: 'photographs/web/ig-CcJXINyNRMG.webp', w: 1200, h: 1500 },
+  { src: 'photographs/web/ig-CYhIXSpvHf2.webp', w: 1200, h: 803 },
+  { src: 'photographs/web/ig-CB3uAh1Fo-r.webp', w: 1200, h: 1141 },
+  { src: 'photographs/web/ig-CBs7KYDldC-.webp', w: 1200, h: 900 },
+  { src: 'photographs/web/ig-CB3qeTNlrN3.webp', w: 1200, h: 801 },
   { src: 'photographs/web/DSC07806.webp', w: 800, h: 1000 },
   { src: 'photographs/web/DSC07921.webp', w: 1000, h: 524 },
   { src: 'photographs/web/DSC07921-2.webp', w: 1000, h: 524 },
@@ -28,4 +39,14 @@ const PHOTOS = [
   { src: 'photographs/web/DSC08650.webp', w: 1000, h: 524 },
   { src: 'photographs/web/DSC08663.webp', w: 1000, h: 524 },
   { src: 'photographs/web/DSC08668.webp', w: 1000, h: 524 },
+];
+
+const VIDEOS = [
+  { kind: 'vimeo', id: '177808190', hash: 'a8e1081be5', title: 'Mabel Aur Mein Trailer', poster: 'photographs/video-posters/mabel-aur-mein.webp', crop: 0.86, w: 16, h: 9 },
+  { kind: 'vimeo', id: '626236240', hash: 'd9bdc5f27c', title: 'NGP Documentary 2015 Trailer', poster: 'photographs/video-posters/ngp-documentary.webp', crop: 0.86, w: 16, h: 9 },
+  { kind: 'vimeo', id: '339681477', hash: '', title: 'Awaazen - Ali Suhail', poster: 'photographs/video-posters/awaazen.webp', crop: 0.84, w: 16, h: 9 },
+  { kind: 'youtube', id: 'lGEZff9Nvw0', hash: '', title: 'dopehar', poster: 'photographs/video-posters/dopehar.webp', w: 16, h: 9 },
+  { kind: 'link', href: 'https://www.instagram.com/reel/DKM8nEnCAmG/', title: 'Video on Instagram', poster: 'photographs/video-posters/ig-DKM8nEnCAmG.webp', w: 720, h: 1280 },
+  { kind: 'link', href: 'https://www.instagram.com/tv/CW7mhQmAS1Q/', title: 'Video on Instagram', poster: 'photographs/video-posters/ig-CW7mhQmAS1Q.webp', w: 720, h: 1280 },
+  { kind: 'link', href: 'https://www.instagram.com/reel/CkTSf6BAL6X/', title: 'Video on Instagram', poster: 'photographs/video-posters/ig-CkTSf6BAL6X.webp', w: 1080, h: 1920 },
 ];

@@ -157,7 +157,13 @@
 .wall-col:nth-child(3) { margin-top: 24px; }
 .wall-col:nth-child(4) { margin-top: 72px; }
 .wall-col figure { display: grid; gap: 8px; }
-.wall-ph { border-radius: 16px; overflow: hidden; background: var(--paper); }
+.wall-ph { position: relative; border-radius: 16px; overflow: hidden; background: var(--paper) center / cover no-repeat; }
+/* video tiles: silent loops with no frame and no controls */
+.wall-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+.wall-embed[data-kind="youtube"] iframe { inset: -10%; width: 120%; height: 120%; }   /* a little larger, so YouTube's title bar sits outside the tile */
+.wall-poster { display: block; text-decoration: none; }
+.wall-poster .play { position: absolute; left: 14px; bottom: 14px; width: 42px; height: 42px; padding-left: 3px; box-sizing: border-box; display: grid; place-items: center; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--ink); font-size: .8rem; transition: scale .3s var(--ease-spring); }
+.wall-poster:hover .play { scale: 1.12; }
 .wall-col img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 16px; transition: opacity .5s var(--ease), scale .45s var(--ease-spring); }
 .wall-col img.fading { opacity: 0; }
 .wall-col figure:hover img { scale: 1.03; }
