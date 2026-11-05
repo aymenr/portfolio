@@ -31,7 +31,7 @@ const PROJECTS = [
     title: 'Monetisation experiments',
     desc: 'A run of monetisation experiments on Fluid Learn mode that grew premium revenue by a third.',
     stats: [['+33%', 'premium revenue']],
-    img: 'monetisation%20experiments.webp', href: SLIDES.monetisation, cta: 'View the case study',
+    img: 'monetisation-experiments.webp', href: SLIDES.monetisation, cta: 'View the case study',
   },
   {
     id: 'lingobites', kind: 'work', org: 'Lingoda', type: 'Case study',
