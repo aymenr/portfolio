@@ -8,7 +8,7 @@
    ========================================================================== */
 
 const DEV_MODE_DEFAULT = true;
-const DEFAULT_VARIANT = 'editorial';
+const DEFAULT_VARIANT = 'alice';
 
 const SLIDES = {
   lingodaApp: 'https://www.figma.com/slides/ebqTfmzGyx9FKhsbFZOwj2/Lingoda-mobile-app--Khan-Academy-?t=da21xlf379yYpVYi-6',
@@ -72,10 +72,24 @@ const PROJECTS = [
   },
 ];
 
+// The chosen design (Alice · Final) shows five projects, in this order of importance.
+// 'midi' lives here, not in PROJECTS, so the exploration variants stay as they were.
+const FINAL_ORDER = ['midi', 'lingoda-app', 'monetisation', 'lingobites', 'seda'];
+const FINAL_EXTRA = {
+  midi: {
+    id: 'midi', kind: 'own', org: 'Falsa Club', type: 'Music tools', title: 'MIDI',
+    desc: 'A MIDI app that runs in the browser, from Falsa Club, my home for the music tools I design and build.',
+    stats: [],
+    img: 'midi-play.webp', href: 'https://midi.falsaclub.com/', cta: 'Open the MIDI app',
+    extra: [['Falsa Club', 'https://falsaclub.com/'], ['MIDI Play', 'https://midiplay.falsaclub.com/']],
+  },
+};
+
 // Order for the "mixed" index: own products woven between case studies
 const MIXED_ORDER = ['seda', 'lingoda-app', 'sampler', 'monetisation', 'lingobites', 'falsa', 'visual'];
 
 const VARIANTS = [
+  { id: 'alice', name: 'Alice · Final', blurb: 'Alice Zhao style. Projects as masonry, or bento via the Display control.', fonts: 'Hanken Grotesk' },
   { id: 'editorial', name: 'The Quarterly', blurb: 'Old magazine. Masthead, column rules, drop caps, folios.', fonts: 'Bodoni Moda, Newsreader and IBM Plex Mono' },
   { id: 'riso', name: 'Riso Zine', blurb: 'Two-colour risograph. Overprint, misregistration, halftone photos.', fonts: 'Bricolage Grotesque and Atkinson Hyperlegible' },
   { id: 'collage', name: 'Cut & Paste', blurb: 'Kraft paper, masking tape, torn edges, ransom-note letters.', fonts: 'Abril Fatface, Bungee, Special Elite and Courier Prime' },
@@ -142,7 +156,7 @@ function cardHTML(p, i) {
     ? `<ul class="card-extra">${p.extra.map(([l, h]) => `<li><a href="${h}" target="_blank" rel="noopener">${esc(l)} ↗</a></li>`).join('')}</ul>`
     : '';
   return `
-    <article class="card reveal" data-kind="${p.kind}" data-id="${p.id}" data-preview="${p.img || ''}" style="--i:${i}">
+    <article class="card reveal" data-kind="${p.kind}" data-id="${p.id}" data-i="${i}" data-preview="${p.img || ''}" style="--i:${i}">
       <figure class="card-media">${media}<span class="card-plate">Plate ${roman(i + 1)}</span></figure>
       <div class="card-body">
         <div class="card-meta">
@@ -173,10 +187,31 @@ function groupHTML(g, items, offset) {
     </section>`;
 }
 
+// Alice · Final: one list in priority order. Masonry = three columns filled left to right; bento = flat grid.
+function finalHTML(display) {
+  const byId = { ...Object.fromEntries(PROJECTS.map((p) => [p.id, p])), ...FINAL_EXTRA };
+  byId.seda = { ...byId.seda, img: 'seda-speech.webp' }; // real thumbnail instead of the drawn cover
+  const cards = FINAL_ORDER.map((id, i) => cardHTML(byId[id], i));
+  const body = display === 'masonry'
+    ? [0, 1, 2].map((c) => `<div class="col">${cards.filter((_, i) => i % 3 === c).join('')}</div>`).join('')
+    : cards.join('');
+  return `
+    <section class="group" id="work" data-group="work">
+      <header class="section-head">
+        <span class="section-mark">Work</span>
+        <h2 class="section-title">Selected work</h2>
+        <p class="section-note">Case studies and my own products, in one list.</p>
+      </header>
+      <div class="cards">${body}</div>
+    </section>`;
+}
+
 function renderProjects(order) {
   const root = document.getElementById('projects');
   const byId = Object.fromEntries(PROJECTS.map((p) => [p.id, p]));
-  if (order === 'mixed') {
+  if (isFinal()) {
+    root.innerHTML = finalHTML(state.display);
+  } else if (order === 'mixed') {
     root.innerHTML = groupHTML(
       { id: 'work', mark: 'Contents', title: 'Index of work', note: 'Case studies and my own products, in one list.' },
       MIXED_ORDER.map((id) => byId[id]), 0
@@ -202,17 +237,22 @@ const params = new URLSearchParams(location.search);
 const state = {
   v: params.get('v') || store.get('v') || DEFAULT_VARIANT,
   order: params.get('order') || store.get('order') || 'work',
+  display: params.get('display') || store.get('display') || 'masonry',
   motion: store.get('motion') || 'on',
   dev: params.has('dev') || store.get('dev') === '1' || DEV_MODE_DEFAULT,
 };
 if (!VARIANTS.some((x) => x.id === state.v)) state.v = DEFAULT_VARIANT;
+if (state.display !== 'bento') state.display = 'masonry';
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches && !store.get('motion')) state.motion = 'off';
 
 const root = document.documentElement;
+const isFinal = () => state.v === 'alice';
 
 function applyVariant(id) {
   const v = VARIANTS.find((x) => x.id === id) || VARIANTS[0];
+  const wasFinal = isFinal();
   state.v = v.id;
+  if (wasFinal !== isFinal()) renderProjects(state.order);
   store.set('v', v.id);
   const link = document.getElementById('variant-css');
   const href = `variants/${v.id}.css`;
@@ -241,6 +281,14 @@ function applyOrder(order) {
   store.set('order', state.order);
   root.dataset.order = state.order;
   renderProjects(state.order);
+  syncPanel();
+}
+
+function applyDisplay(d) {
+  state.display = d === 'bento' ? 'bento' : 'masonry';
+  store.set('display', state.display);
+  root.dataset.display = state.display;
+  if (isFinal()) renderProjects(state.order);
   syncPanel();
 }
 
@@ -345,7 +393,12 @@ function buildPanel() {
         <button type="button" class="dev-btn" data-step="1" aria-label="Next style">→</button>
       </div>
       <p class="dev-blurb"></p>
-      <div class="dev-seg" role="group" aria-label="Project order">
+      <div class="dev-seg" role="group" aria-label="Project display" data-final-only>
+        <span>Display</span>
+        <button type="button" data-display="masonry">Masonry</button>
+        <button type="button" data-display="bento">Bento</button>
+      </div>
+      <div class="dev-seg" role="group" aria-label="Project order" data-old-only>
         <span>Order</span>
         <button type="button" data-order="work">Work first</button>
         <button type="button" data-order="mixed">Mixed index</button>
@@ -356,13 +409,14 @@ function buildPanel() {
         <button type="button" data-motion="off">Off</button>
         <button type="button" class="dev-replay" data-replay>Replay</button>
       </div>
-      <p class="dev-keys"><kbd>[</kbd> <kbd>]</kbd> flip styles · <kbd>O</kbd> order · <kbd>M</kbd> motion · <kbd>.</kbd> hide panel</p>
+      <p class="dev-keys"><kbd>[</kbd> <kbd>]</kbd> flip styles · <kbd>O</kbd> order · <kbd>D</kbd> display · <kbd>M</kbd> motion · <kbd>.</kbd> hide panel</p>
     </div>`;
   document.body.appendChild(panel);
 
   panel.querySelector('#dev-variant').addEventListener('change', (e) => applyVariant(e.target.value));
   panel.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => step(+b.dataset.step)));
   panel.querySelectorAll('[data-order]').forEach((b) => b.addEventListener('click', () => applyOrder(b.dataset.order)));
+  panel.querySelectorAll('[data-display]').forEach((b) => b.addEventListener('click', () => applyDisplay(b.dataset.display)));
   panel.querySelectorAll('[data-motion]').forEach((b) => b.addEventListener('click', () => applyMotion(b.dataset.motion)));
   panel.querySelector('[data-replay]').addEventListener('click', () => { applyMotion('on'); window.scrollTo({ top: 0 }); replay(); });
   panel.querySelector('.dev-toggle').addEventListener('click', togglePanel);
@@ -384,6 +438,7 @@ function syncPanel() {
   const url = new URL(location.href);
   url.searchParams.set('v', state.v);
   url.searchParams.set('order', state.order);
+  url.searchParams.set('display', state.display);
   try { history.replaceState(null, '', url); } catch { /* sandboxed */ }
   if (!panel) return;
   const i = VARIANTS.findIndex((x) => x.id === state.v);
@@ -391,7 +446,10 @@ function syncPanel() {
   panel.querySelector('.dev-count').textContent = `${i + 1}/${VARIANTS.length}`;
   panel.querySelector('.dev-blurb').textContent = VARIANTS[i].blurb;
   panel.querySelectorAll('[data-order]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.order === state.order)));
+  panel.querySelectorAll('[data-display]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.display === state.display)));
   panel.querySelectorAll('[data-motion]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.motion === state.motion)));
+  panel.querySelector('[data-final-only]').hidden = !isFinal();
+  panel.querySelector('[data-old-only]').hidden = isFinal();
 }
 
 document.addEventListener('keydown', (e) => {
@@ -405,7 +463,8 @@ document.addEventListener('keydown', (e) => {
   if (!panel) return;
   if (e.key === ']') step(1);
   else if (e.key === '[') step(-1);
-  else if (e.key === 'o' || e.key === 'O') applyOrder(state.order === 'work' ? 'mixed' : 'work');
+  else if (e.key === 'o' || e.key === 'O') { if (!isFinal()) applyOrder(state.order === 'work' ? 'mixed' : 'work'); }
+  else if (e.key === 'd') { if (isFinal()) applyDisplay(state.display === 'masonry' ? 'bento' : 'masonry'); }
   else if (e.key === 'm' || e.key === 'M') applyMotion(state.motion === 'on' ? 'off' : 'on');
   else if (e.key === '.') togglePanel();
 });
@@ -416,6 +475,7 @@ splitLetters();
 fillDates();
 root.dataset.motion = state.motion;
 root.dataset.order = state.order;
+root.dataset.display = state.display;
 if (state.dev) buildPanel();
 renderProjects(state.order);
 applyVariant(state.v);

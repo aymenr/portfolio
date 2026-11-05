@@ -76,7 +76,7 @@ ul { list-style: none; }
 .ink-link:hover { color: var(--accent); }
 
 /* decorations: off unless a variant turns them on */
-.sticker, .stamp, .doodle, .marquee, .card-plate, .card-tape, .card-disc, .cursor-preview { display: none; }
+.sticker, .stamp, .doodle, .marquee, .card-plate, .card-tape, .card-disc, .cursor-preview, .photo-wall { display: none; }
 .doodle { color: var(--accent); pointer-events: none; }
 
 /* ---------- section heads ---------- */
@@ -92,7 +92,7 @@ ul { list-style: none; }
 /* three own products sit in one row; in the mixed index the first item (Seda) becomes the cover story */
 @media (min-width: 900px) {
   [data-group="made"] .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  html:not([data-v="index"], [data-v="catalogue"], [data-v="sleeve"], [data-v="swiss"], [data-v="editorial"], [data-v="ref-alicezhao"], [data-v="ref-anurag"], [data-v="ref-folasewa"], [data-v="ref-azeem"])[data-order="mixed"] .cards > .card:first-child {
+  html:not([data-v="index"], [data-v="catalogue"], [data-v="sleeve"], [data-v="swiss"], [data-v="editorial"], [data-v="ref-alicezhao"], [data-v="ref-anurag"], [data-v="ref-folasewa"], [data-v="ref-azeem"], [data-v="alice"])[data-order="mixed"] .cards > .card:first-child {
     grid-column: 1 / -1; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: center; column-gap: 40px;
   }
 }
@@ -231,6 +231,7 @@ ul { list-style: none; }
   box-shadow: 0 12px 40px rgba(0,0,0,.28);
   letter-spacing: normal; text-transform: none;
 }
+.devpanel [hidden] { display: none; }
 .devpanel * { font: inherit; letter-spacing: normal; text-transform: none; }
 .devpanel.collapsed { width: auto; }
 .devpanel.collapsed .dev-body { display: none; }
