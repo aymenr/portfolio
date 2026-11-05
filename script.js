@@ -80,7 +80,7 @@ const FINAL_EXTRA = {
     id: 'midi', kind: 'own', org: 'Falsa Club', type: 'Music tools', title: 'MIDI',
     desc: 'A MIDI app that runs in the browser, from Falsa Club, my home for the music tools I design and build.',
     stats: [],
-    img: 'midi-play.webp', href: 'https://midi.falsaclub.com/', cta: 'Open the MIDI app',
+    img: 'midi-thumb.webp', href: 'https://midi.falsaclub.com/', cta: 'Open the MIDI app',
     extra: [['Falsa Club', 'https://falsaclub.com/'], ['MIDI Play', 'https://midiplay.falsaclub.com/']],
   },
 };
@@ -190,7 +190,7 @@ function groupHTML(g, items, offset) {
 // Alice · Final: one list in priority order. Masonry = three columns filled left to right; bento = flat grid.
 function finalHTML(display) {
   const byId = { ...Object.fromEntries(PROJECTS.map((p) => [p.id, p])), ...FINAL_EXTRA };
-  byId.seda = { ...byId.seda, img: 'seda-speech.webp' }; // real thumbnail instead of the drawn cover
+  byId.seda = { ...byId.seda, img: 'seda-thumb.webp' }; // real thumbnail instead of the drawn cover
   const cards = FINAL_ORDER.map((id, i) => cardHTML(byId[id], i));
   const body = display === 'masonry'
     ? [0, 1, 2].map((c) => `<div class="col">${cards.filter((_, i) => i % 3 === c).join('')}</div>`).join('')
@@ -469,6 +469,58 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === '.') togglePanel();
 });
 
+/* ---------- photo wall (Alice · Final) ----------
+   A fresh random set of photographs on every load, and one tile quietly swaps for another photo of the same shape every few seconds.
+   The photo list lives in photos-data.js. Tiles are grouped by orientation so a swap never moves the layout. */
+
+const WALL_LAYOUT = [['tall', 'wide', 'std'], ['film', 'std', 'std'], ['wide', 'std', 'music', 'wide']];
+const SLOT_AR = { tall: '4 / 5', std: '4 / 3', wide: '1000 / 524' };
+const WALL_TILES = {
+  film: ['Film', 'Watch the video portfolio ↗', 'https://aymenr.notion.site/Aymen-s-Video-Portfolio-7c8f4e0deb8948a0a9ffa06579826dd6'],
+  music: ['Music', 'Electronic music on SoundCloud ↗', 'https://soundcloud.com/paratha-roll'],
+};
+
+const photoClass = (p) => { const r = p.w / p.h; return r < 0.9 ? 'tall' : r > 1.7 ? 'wide' : 'std'; };
+const shuffled = (list) => { const a = list.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function buildWall() {
+  const wall = document.querySelector('.photo-wall');
+  if (!wall || typeof PHOTOS === 'undefined') return;
+  const pools = { tall: [], std: [], wide: [] };
+  shuffled(PHOTOS).forEach((p) => pools[photoClass(p)].push(p));
+  const used = { tall: 0, std: 0, wide: 0 };
+  let n = 0;
+  wall.innerHTML = WALL_LAYOUT.map((col) => `<div class="wall-col">${col.map((slot) => {
+    if (WALL_TILES[slot]) {
+      const [label, text, href] = WALL_TILES[slot];
+      return `<a class="wall-tile" href="${href}" target="_blank" rel="noopener"><span>${label}</span><span>${text}</span></a>`;
+    }
+    const p = pools[slot][used[slot]++];
+    if (!p) return '';
+    n += 1;
+    return `<figure data-class="${slot}"><div class="wall-ph" style="aspect-ratio:${SLOT_AR[slot]}"><img src="${p.src}" alt="Photograph by Aymen" loading="lazy" decoding="async"></div><figcaption>Photograph ${String(n).padStart(2, '0')}</figcaption></figure>`;
+  }).join('')}</div>`).join('');
+}
+
+function rotateWall() {
+  if (state.motion === 'off' || document.hidden || typeof PHOTOS === 'undefined') return;
+  const wall = document.querySelector('.photo-wall');
+  if (!wall || !wall.offsetParent) return;
+  const box = wall.getBoundingClientRect();
+  if (box.bottom < 0 || box.top > window.innerHeight) return; // only while it is on screen
+  const figs = [...wall.querySelectorAll('figure[data-class]')].filter((f) => !f.matches(':hover'));
+  if (!figs.length) return;
+  const fig = figs[Math.floor(Math.random() * figs.length)];
+  const shown = new Set([...wall.querySelectorAll('img')].map((i) => i.getAttribute('src')));
+  const options = PHOTOS.filter((p) => photoClass(p) === fig.dataset.class && !shown.has(p.src));
+  if (!options.length) return;
+  const next = options[Math.floor(Math.random() * options.length)];
+  const img = fig.querySelector('img');
+  const pre = new Image();
+  pre.onload = () => { img.classList.add('fading'); setTimeout(() => { img.src = next.src; img.classList.remove('fading'); }, 500); };
+  pre.src = next.src;
+}
+
 /* ---------- boot ---------- */
 
 splitLetters();
@@ -478,5 +530,7 @@ root.dataset.order = state.order;
 root.dataset.display = state.display;
 if (state.dev) buildPanel();
 renderProjects(state.order);
+buildWall();
+setInterval(rotateWall, 4200);
 applyVariant(state.v);
 requestAnimationFrame(() => root.classList.add('loaded'));

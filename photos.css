@@ -1,0 +1,21 @@
+/* photos.html — the full photograph wall. Builds on variants/alice.css (same tokens, top bar, wall and contact styles). */
+
+.masthead { margin-bottom: 0; }
+.mast-nav a[aria-current="page"] { color: var(--muted); }
+
+/* head: label column | note, like the section heads on the home page */
+.photos-intro {
+  display: grid; grid-template-columns: minmax(0, var(--leftcol)) minmax(0, 1fr); column-gap: var(--cgap);
+  align-items: baseline; padding-block: 88px 40px;
+}
+.photos-title { font: 600 1.05rem var(--font-body); letter-spacing: -.01em; }
+.photos-note { font-size: .95rem; color: var(--muted); max-width: 62ch; }
+.photos-note a { color: var(--ink); }
+@media (max-width: 760px) { .photos-intro { grid-template-columns: 1fr; gap: 2px; padding-block: 56px 28px; } }
+
+/* every photo, balanced across the columns by photos.js */
+.photo-wall-all { margin: 0; }
+@media (max-width: 760px) { .photo-wall-all { gap: 8px; } .photo-wall-all .wall-col { gap: 14px; } .photo-wall-all .wall-col:nth-child(n) { margin-top: 0; } }
+
+.contact { padding-block: 120px 24px; }
+.contact-links { margin-top: 4px; }

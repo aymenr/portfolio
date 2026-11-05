@@ -76,7 +76,7 @@ ul { list-style: none; }
 .ink-link:hover { color: var(--accent); }
 
 /* decorations: off unless a variant turns them on */
-.sticker, .stamp, .doodle, .marquee, .card-plate, .card-tape, .card-disc, .cursor-preview, .photo-wall { display: none; }
+.sticker, .stamp, .doodle, .marquee, .card-plate, .card-tape, .card-disc, .cursor-preview, .photo-wall, .wall-all { display: none; }
 .doodle { color: var(--accent); pointer-events: none; }
 
 /* ---------- section heads ---------- */
