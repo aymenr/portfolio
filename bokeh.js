@@ -5,11 +5,11 @@
 (() => {
 const DEF = { grain: 0.7, fine: 0.85, tile: 180, tone: 0.55, blob: 0.9, size: 100, lift: 0, csat: 100, clight: 88 };   // csat / clight: saturation and lightness (%) of the flat case-study cards
 const HUES = {   // 4 hues per card: main, second, light, accent
-  'midi':         ['#ff85c4', '#ffb28f', '#a87de8', '#ff7a8a'],
+  'midi':         ['#ff57ae', '#ffd2bd', '#895ccc', '#f87786'],
   'lingoda-app':  ['#428bff', '#ee9fd0', '#dc93c1', '#4082ec'],
-  'monetisation': ['#f97f53', '#ffe3d6', '#f77db4', '#edb6cc'],
+  'monetisation': ['#ff7c4d', '#fde0d3', '#7b65ec', '#edb6cc'],
   'lingobites':   ['#4d77f5', '#d6dbff', '#ff9494', '#ff99b6'],
-  'seda':         ['#ff6c47', '#ffa8a8', '#f490cf', '#9265ec'],
+  'seda':         ['#ffc6b8', '#f59e9e', '#ff8ad4', '#b894ff'],
 };
 const POS = {    // where each of the six blobs sits (x%, y%)
   'midi':         [[50, 6], [18, 22], [50, 100], [86, 18], [72, 40], [10, 48]],
