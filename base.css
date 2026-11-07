@@ -12,6 +12,7 @@
   --muted: #6b655d;
   --paper: #ffffff;
   --accent: #c2410c;
+  --link-hover: #6948a1;   /* hover colour for every link: purple */
   --accent-2: #1d4ed8;
   --line: color-mix(in srgb, var(--ink) 18%, transparent);
   --font-display: Georgia, serif;
@@ -73,7 +74,7 @@ ul { list-style: none; }
 .hero-portrait img { width: 100%; height: 100%; object-fit: cover; }
 .hero-portrait figcaption { font-family: var(--font-meta); font-size: .75rem; color: var(--muted); }
 .ink-link { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.ink-link:hover { color: var(--accent); }
+.ink-link:hover { color: var(--link-hover); }
 
 /* decorations: off unless a variant turns them on */
 .sticker, .stamp, .doodle, .marquee, .card-plate, .card-tape, .card-disc, .cursor-preview, .photo-wall, .wall-all { display: none; }
@@ -92,7 +93,7 @@ ul { list-style: none; }
 /* three own products sit in one row; in the mixed index the first item (Seda) becomes the cover story */
 @media (min-width: 900px) {
   [data-group="made"] .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  html:not([data-v="index"], [data-v="catalogue"], [data-v="sleeve"], [data-v="swiss"], [data-v="editorial"], [data-v="ref-alicezhao"], [data-v="ref-anurag"], [data-v="ref-folasewa"], [data-v="ref-azeem"], [data-v="alice"])[data-order="mixed"] .cards > .card:first-child {
+  html:not([data-v="index"], [data-v="catalogue"], [data-v="sleeve"], [data-v="swiss"], [data-v="editorial"], [data-v="ref-alicezhao"], [data-v="ref-anurag"], [data-v="ref-folasewa"], [data-v="ref-azeem"], [data-v="alice"], [data-v="alice-merged"])[data-order="mixed"] .cards > .card:first-child {
     grid-column: 1 / -1; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: center; column-gap: 40px;
   }
 }
@@ -107,15 +108,12 @@ ul { list-style: none; }
 .card:has(.card-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 6px; }
 .card-link:focus-visible { outline: none; }
 .card-desc { max-width: 56ch; }
-.card-stats { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .9rem; }
-.card-stats b { font-weight: 700; }
-.card-stats span { color: var(--muted); }
 .card-cta { font-family: var(--font-meta); font-size: .8rem; }
 .card-cta .arr { display: inline-block; transition: transform .3s var(--ease-spring); }
 .card:hover .card-cta .arr { transform: translate(3px, -3px); }
 .card-extra { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--font-meta); font-size: .8rem; }
 .card-extra a { text-underline-offset: 3px; }
-.card-extra a:hover { color: var(--accent); }
+.card-extra a:hover { color: var(--link-hover); }
 
 /* drawn covers for projects without thumbnails */
 .cover {
@@ -142,7 +140,7 @@ ul { list-style: none; }
 .offscreen-head h3 { font-family: var(--font-display); font-size: 1.3rem; }
 .offscreen-links { display: flex; flex-wrap: wrap; gap: 4px 20px; font-family: var(--font-meta); font-size: .85rem; }
 .offscreen-links a { text-decoration: none; }
-.offscreen-links a:hover { color: var(--accent); }
+.offscreen-links a:hover { color: var(--link-hover); }
 .contact-sheet {
   display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
   padding-bottom: 12px; scrollbar-width: thin;
@@ -155,7 +153,7 @@ ul { list-style: none; }
 .contact { display: grid; gap: 16px; padding-block: 96px 24px; }
 .contact-kicker { font-family: var(--font-meta); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .contact-big { font-family: var(--font-display); font-size: clamp(1.5rem, 5.4vw, 4rem); line-height: 1.05; text-decoration: none; overflow-wrap: anywhere; }
-.contact-big:hover { color: var(--accent); }
+.contact-big:hover { color: var(--link-hover); }
 .contact-links { display: flex; flex-wrap: wrap; gap: 6px 24px; font-family: var(--font-meta); font-size: .9rem; }
 .contact-links a { text-underline-offset: 4px; }
 .colophon { margin-top: 48px; font-family: var(--font-meta); font-size: .72rem; color: var(--muted); }
@@ -225,7 +223,8 @@ ul { list-style: none; }
   position: fixed; z-index: 1000;
   right: calc(12px + env(safe-area-inset-right, 0px));
   bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-  width: min(320px, calc(100vw - 24px));
+  width: min(460px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px); overflow-y: auto;
   font: 13px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   color: #f2f0ea; background: #1b1a18; border: 1px solid #3a3833; border-radius: 12px;
   box-shadow: 0 12px 40px rgba(0,0,0,.28);
@@ -257,6 +256,13 @@ ul { list-style: none; }
 .dev-seg > span { color: #a8a49a; width: 52px; }
 .dev-seg button[aria-pressed="true"] { background: #f2f0ea; color: #1b1a18; border-color: #f2f0ea; }
 .dev-replay { margin-left: auto; }
+.dev-bokeh { display: grid; gap: 6px; }
+.dev-bokeh label { display: grid; grid-template-columns: 110px 1fr 3.5em; gap: 8px; align-items: center; color: #a8a49a; }
+.dev-bokeh output { text-align: right; color: #f2f0ea; font-variant-numeric: tabular-nums; }
+.dev-bokeh input[type=range] { width: 100%; min-width: 0; }
 .dev-keys { color: #8b877e; font-size: 12px; }
 .devpanel kbd { font-family: ui-monospace, monospace; font-size: 11px; background: #2a2925; border: 1px solid #45423b; border-radius: 4px; padding: 0 4px; }
 .devpanel :focus-visible { outline: 2px solid #d9b44a; outline-offset: 2px; }
+
+/* "About me" heading inside the blurb: only the Alice · Final style shows it */
+.about-title { display: none; }

@@ -9,16 +9,9 @@ function colCount() {
   return w >= 1100 ? 4 : w >= 700 ? 3 : 2;
 }
 
-// photos and videos in one list: a video after every fifth photograph
+// the photography page shows photographs only (films live on film.html)
 function wallItems() {
-  const items = [];
-  let v = 0;
-  PHOTOS.forEach((p, i) => {
-    items.push({ photo: p, n: i + 1 });
-    if ((i + 1) % 5 === 0 && v < VIDEOS.length) items.push({ video: VIDEOS[v++] });
-  });
-  while (v < VIDEOS.length) items.push({ video: VIDEOS[v++] });
-  return items;
+  return PHOTOS.map((p, i) => ({ it: p, n: i + 1 }));
 }
 
 function renderWall() {
@@ -28,25 +21,17 @@ function renderWall() {
   const startOffsets = [0, 56, 24, 72];                        // matches the staggered start of the home page wall
   const heights = Array.from({ length: cols }, (_, i) => (cols > 2 ? startOffsets[i] : 0) / 300);
   const buckets = Array.from({ length: cols }, () => []);
-  wallItems().forEach((it, i) => {
-    const size = it.photo || it.video;
+  wallItems().forEach(({ it, n }, i) => {
     const c = heights.indexOf(Math.min(...heights));
-    heights[c] += (size.h * (size.crop || 1)) / size.w + 0.1;                        // item height as a share of column width, plus the caption
-    if (it.photo) {
-      const p = it.photo;
-      buckets[c].push(
-        `<figure><div class="wall-ph" style="aspect-ratio:${p.w} / ${p.h}"><img src="${p.src}" alt="Photograph by Aymen" width="${p.w}" height="${p.h}" loading="${i < 8 ? 'eager' : 'lazy'}" decoding="async"></div><figcaption>Photograph ${String(it.n).padStart(2, '0')}</figcaption></figure>`
-      );
-    } else {
-      const v = it.video;
-      buckets[c].push(videoFigure(v, v.kind === 'link' ? `${v.title} ↗` : `Film · ${v.title}`));
-    }
+    heights[c] += it.h / it.w + 0.1;                           // item height as a share of column width, plus the caption
+    // photos and videos both keep their own shape here
+    buckets[c].push(`<figure${isVideo(it) ? ' class="wall-video"' : ''}>${wallFigureInner(it, { aspect: `${it.w} / ${it.h}`, n, eager: i < 8 })}</figure>`);
   });
   wallEl.innerHTML = buckets.map((b) => `<div class="wall-col">${b.join('')}</div>`).join('');
   loadVideos(wallEl);
 }
 
-document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = `${PHOTOS.length} photographs and ${VIDEOS.length} videos.`; });
+document.querySelectorAll('[data-count]').forEach((el) => { el.textContent = `${PHOTOS.length} photographs.`; });
 document.querySelectorAll('[data-year-only]').forEach((el) => { el.textContent = new Date().getFullYear(); });
 renderWall();
 

@@ -1,0 +1,70 @@
+/* Lingoda motion page: one-phone walkthroughs for Solution 1 and Solution 3 (lingoda-live.js). */
+.cs-shots[data-story].lx-host { display: flex; justify-content: center; padding: 40px clamp(16px, 4vw, 56px); overflow: visible; }
+.lx { display: flex; justify-content: center; width: 100%; }
+.lx-phone {
+  position: relative; width: clamp(210px, 25vw, 280px); aspect-ratio: 753 / 1628;
+  border-radius: 9% / 4.2%; overflow: hidden; background: #fff; isolation: isolate;
+  box-shadow: 0 1px 2px rgba(30, 20, 70, .08), 0 18px 44px rgba(60, 40, 140, .18);
+  container-type: inline-size;
+}
+@media (max-width: 640px) { .lx-phone { width: min(66vw, 260px); } }
+
+.lx-stage, .lx-scr { position: absolute; inset: 0; }
+.lx-scr { overflow: hidden; background: #fff; will-change: transform; }
+.lx-scr > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.lx-patch, .lx-btn, .lx-cover, .lx-track, .lx-roll, .lx-rive { position: absolute; }
+.lx-patch, .lx-btn, .lx-face, .lx-roll-i { background-repeat: no-repeat; }
+.lx-round { border-radius: 50%; }
+
+/* buttons: the cut-out face (button + its shadow) presses in over a clean, stretched strip of the background beside it */
+.lx-btn { overflow: visible; }
+.lx-face { position: absolute; inset: 0; transform-origin: center; }
+.lx-btn .lx-face { transition: filter .35s ease .12s; }
+.lx-shade { position: absolute; background: rgba(20, 10, 60, .14); opacity: 0; pointer-events: none; }
+.lx-shade.is-light { background: rgba(20, 10, 60, .07); }
+.lx-unpicked .lx-face { filter: grayscale(1) brightness(1.045) contrast(1.05); }
+/* 4 px of the 836 px screenshot */
+.lx-ring { position: absolute; inset: 0; border-radius: 999px; border: .48cqw solid rgb(215, 220, 226); opacity: 0; transition: opacity .3s ease .12s; }
+.lx-unpicked .lx-ring { opacity: 1; }
+
+/* "Mark as complete": the empty circle fills green and a tick draws in */
+.lx-tick { position: absolute; }
+.lx-tick svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transform-origin: center; }
+.lx-tick-o { fill: #fff; stroke: #d9dae1; stroke-width: 2; }
+.lx-tick path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lx-tick-grey { stroke: #d4d6d8; }
+.lx-tick-white { stroke: #fff; stroke-width: 2.3; stroke-dasharray: 16; stroke-dashoffset: 16; }
+
+/* progress bars drawn over the screenshot's own */
+.lx-cover { background: #fff; }
+.lx-track { border-radius: 999px; overflow: hidden; }
+.lx-fill { height: 100%; border-radius: 999px; }
+.lx-roll { overflow: hidden; background: #fff; }
+.lx-roll-i { position: absolute; inset: 0; }
+.lx-star { position: absolute; z-index: 1; transform-origin: center; }
+.lx-star svg { display: block; width: 100%; height: 100%; overflow: visible; fill: #ffc281; }
+.lx-erase { position: absolute; display: block; }
+/* sleeping Frank's z's */
+.lx-z { position: absolute; z-index: 1; transform-origin: center; }
+.lx-z svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #fa5f5c; stroke-width: 2.3; stroke-linejoin: miter; stroke-linecap: square; }
+
+/* "Weekly goal met" rebuilt */
+.lx-clean { position: absolute; inset: 0; background: #fff; }
+.lx-confetti { position: absolute; inset: 0; pointer-events: none; }
+.lx-confetti canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.lx-cf { position: absolute; width: 0; height: 0; }
+.lx-cf-in { position: absolute; left: 0; top: 0; translate: -50% -50%; }
+.lx-cf-in.dot { border-radius: 50%; }
+.lx-cf-in.rect { border-radius: 1px; }
+.lx-cf-in.tri { clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.lx-cf-in.hex { clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%); }
+.lx-rive { z-index: 1; }
+.lx-rive canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .2s; }
+.lx-rive.is-live canvas { opacity: 1; }
+.lx-frank-still { opacity: 0; transition: opacity .25s; }
+.lx-rive.is-still .lx-frank-still { opacity: 1; }
+.lx-rive.is-live .lx-frank-still { display: none; }
+.lx-clean > .lx-patch, .lx-clean > .lx-track { z-index: 2; }
+.lx-clean > .lx-confetti { z-index: 3; }   /* confetti flies over the text on its way out, then settles clear of it */
+.lx-clean > .lx-bottom { z-index: 4; }

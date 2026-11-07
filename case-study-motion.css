@@ -1,0 +1,206 @@
+/* Motion version of the case-study pages (lingoda-app.html, fluid-learn.html, lingobites.html).
+   Loaded after case-study.css. Everything here only adds movement: layout and colours stay as in the original.
+   Uses the individual transform properties (translate / scale) so it never fights the rotate() the collages already use. */
+
+:root { --mo-ease: cubic-bezier(.2, .8, .2, 1); --mo-spring: cubic-bezier(.34, 1.45, .5, 1); }
+
+/* ---------- 1. Scroll reveal ---------- */
+.mo-pre { opacity: 0; translate: 0 26px; }
+.mo-in { opacity: 1; translate: 0 0; transition: opacity .7s var(--mo-ease), translate .8s var(--mo-ease); transition-delay: var(--d, 0ms); }
+.mo-pre.mo-pop { translate: 0 0; scale: .94; }
+.mo-in.mo-pop { scale: 1; transition-property: opacity, scale; transition-timing-function: var(--mo-spring); }
+
+/* ---------- 2. Flow player: several screens become one phone that plays through them ---------- */
+.cs-shots[data-flow].mf-host { display: block; padding: 36px clamp(16px, 4vw, 56px); }
+.mf { display: flex; align-items: center; justify-content: center; gap: clamp(28px, 6vw, 80px); }
+.mf-device { position: relative; flex: none; width: clamp(170px, 22vw, 244px); aspect-ratio: var(--mf-ratio); }
+.mf-screen { position: absolute; inset: 0; transition: scale .14s ease-out; }
+.mf-screen.is-press { scale: .965; }
+.mf[data-live] .mf-screen { position: absolute; inset: 0; }
+.mf[data-live] .mf-device { width: clamp(190px, 25vw, 270px); }
+.cs-block .mf:not([data-live]) .mf-screen img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; translate: 36px 0; scale: .985; pointer-events: none;
+  transition: opacity .38s ease, translate .6s var(--mo-ease), scale .6s var(--mo-ease);
+}
+.cs-block .mf:not([data-live]) .mf-screen img.is-prev { translate: -36px 0; scale: .985; }
+.cs-block .mf:not([data-live]) .mf-screen img.is-active { opacity: 1; translate: 0 0; scale: 1; }
+
+.mf-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; flex: 0 1 270px; min-width: 0; }
+.mf-step {
+  position: relative; display: grid; grid-template-columns: 30px 1fr; align-items: center; gap: 12px; width: 100%;
+  padding: 12px 14px; border: 0; border-radius: 12px; background: transparent; text-align: left; cursor: pointer;
+  font: 500 .95rem/1.3 var(--font-body); color: #3a3358; opacity: .55; overflow: hidden;
+  transition: opacity .3s, background .3s, translate .4s var(--mo-ease);
+}
+.cs-blue .mf-step { color: #1d2a4d; }
+.mf-step.is-on { opacity: 1; background: rgba(255, 255, 255, .62); translate: 6px 0; }
+.mf-step:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.mf-n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, .7); font-size: .8rem; font-weight: 600; transition: background .3s, color .3s; }
+.mf-step.is-on .mf-n { background: var(--ink); color: #fff; }
+.mf-step.is-done .mf-n { background: var(--cs-accent, #8c48f3); color: #fff; }
+.mf-fill { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--ink); transform-origin: left; scale: 0 1; opacity: .8; }
+.mf-step.is-on .mf-fill { animation: mf-fill var(--dwell, 2.8s) linear forwards; }
+@keyframes mf-fill { to { scale: 1 1; } }
+.mf:not(.is-live) .mf-fill { animation-play-state: paused; }
+.mf[data-still] .mf-fill { display: none; }
+
+/* wide screens (desktop captures): the list sits underneath */
+.mf[data-shape="wide"] { flex-direction: column; gap: 22px; }
+.mf[data-shape="wide"] .mf-device { width: min(660px, 100%); }
+.cs-block .mf[data-shape="wide"]:not([data-live]) .mf-screen img { border-radius: 1% / 1.6%; }
+.mf[data-shape="wide"] .mf-steps { display: flex; flex-wrap: wrap; justify-content: center; flex: none; }
+.mf[data-shape="wide"] .mf-step { width: auto; }
+.mf[data-shape="wide"] .mf-step.is-on { translate: 0 0; }
+
+@media (max-width: 640px) {
+  .mf { flex-direction: column; gap: 22px; }
+  .mf-device { width: min(62vw, 240px); }
+  .mf-steps { display: flex; flex-wrap: wrap; justify-content: center; flex: none; }
+  .mf-step { width: auto; padding: 8px 12px; grid-template-columns: 24px auto; font-size: .85rem; }
+  .mf-n { width: 24px; height: 24px; }
+  .mf-step.is-on { translate: 0 0; }
+}
+
+/* ---------- 3. Annotated screens (Lingoda, Guided course page) ---------- */
+[data-anno] .a-ph { opacity: 0; translate: 0 44px; scale: .94; }
+[data-anno] .a-cap { opacity: 0; translate: 0 10px; }
+[data-anno].is-in .a-ph { opacity: 1; translate: 0 0; scale: 1; transition: opacity .6s ease, translate .9s var(--mo-ease), scale .9s var(--mo-ease); }
+[data-anno].is-in .a-p1 { transition-delay: 0s; } [data-anno].is-in .a-p2 { transition-delay: .18s; } [data-anno].is-in .a-p3 { transition-delay: .36s; }
+[data-anno].is-in .a-cap { opacity: 1; translate: 0 0; transition: opacity .5s ease .5s, translate .6s var(--mo-ease) .5s; }
+/* the notes and their connector lines are static: only the screens and captions enter */
+@media (max-width: 760px) { [data-anno] .a-note, [data-anno] .a-lines { display: none; } }
+
+/* ---------- 4. Use-case journey diagram builds left to right ---------- */
+[data-uc] svg * { transform-box: fill-box; transform-origin: center; }
+[data-uc] .uc-step > *, [data-uc] .uc-arrow > *, [data-uc] .uc-note, [data-uc] .uc-divider, [data-uc] .uc-group > *, [data-uc] .uc-link,
+[data-uc] .uc-phone, [data-uc] .uc-ptext, [data-uc] .uc-uc, [data-uc] .uc-up-arrows { opacity: 0; }
+[data-uc] .uc-step > rect { translate: 0 10px; scale: .92; }
+[data-uc] .uc-phone { scale: .8; }
+[data-uc].is-in .uc-step > *, [data-uc].is-in .uc-arrow > *, [data-uc].is-in .uc-note, [data-uc].is-in .uc-divider, [data-uc].is-in .uc-group > *,
+[data-uc].is-in .uc-link, [data-uc].is-in .uc-phone, [data-uc].is-in .uc-ptext, [data-uc].is-in .uc-uc, [data-uc].is-in .uc-up-arrows {
+  opacity: 1; translate: 0 0; scale: 1;
+  transition: opacity .5s ease, translate .6s var(--mo-ease), scale .6s var(--mo-spring); transition-delay: calc(var(--k, 0) * 110ms);
+}
+[data-uc].is-in .uc-divider, [data-uc].is-in .uc-link, [data-uc].is-in .uc-up-arrows, [data-uc].is-in .uc-arrow > * { opacity: .8; }
+[data-uc].is-in .uc-divider { opacity: .5; }
+/* flowing dashes on the arrows once drawn */
+@keyframes mo-dash { to { stroke-dashoffset: -14; } }
+[data-uc].is-in .uc-arrow path, [data-uc].is-in .uc-link, [data-uc].is-in .uc-up-arrows { animation: mo-dash 1.4s linear 2.2s infinite; }
+
+/* ---------- 5. StudySmarter hero collage: screens pop in, then drift ---------- */
+@keyframes mo-pop { from { opacity: 0; scale: .86; translate: 0 34px; } to { opacity: 1; scale: 1; translate: 0 0; } }
+@keyframes mo-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -9px; } }
+.cs-collage .cs-stage > img, .cs-collage .cs-stage > .live-up { animation: mo-pop .95s var(--mo-spring) both, mo-float 6.5s ease-in-out 1.2s infinite; }
+.cs-collage .c-trial { animation-delay: .1s, 1.4s; } .cs-collage .c-settings { animation-delay: .3s, 2.2s; }
+.cs-collage .c-upgrade { animation-delay: .5s, 3.1s; } .cs-collage .c-sessions { animation-delay: .7s, 3.9s; }
+
+/* ---------- 6. StudySmarter concept collages: cards land one by one ---------- */
+.cs-stage-limits img, .cs-stage-limits .live-chg, .cs-stage-limits .live-hrt, .cs-stage-fm .f-upgrade, .cs-stage-fm .f-giveup, .cs-stage-fm .f-typein { opacity: 0; scale: .9; translate: 0 -40px; }
+.cs-stage-fm .f-giveup { translate: 40px 0; }
+.cs-stage-fm .f-typein { translate: 0 40px; }
+.cs-stage-limits.is-in img, .cs-stage-limits.is-in .live-chg, .cs-stage-limits.is-in .live-hrt, .cs-stage-fm.is-in .f-upgrade, .cs-stage-fm.is-in .f-giveup, .cs-stage-fm.is-in .f-typein {
+  opacity: 1; scale: 1; translate: 0 0; transition: opacity .5s ease, scale .8s var(--mo-spring), translate .9s var(--mo-spring);
+}
+.cs-stage-limits.is-in .l-hearts, .cs-stage-fm.is-in .f-giveup { transition-delay: .35s; }
+.cs-stage-fm.is-in .f-typein { transition-delay: .7s; }
+/* ---------- 7. Small touches ---------- */
+.cs-objectives li, .cs-status li, .cs-metrics li, .cs-insights li, .cs-points li, .cs-learn li { transition: translate .3s var(--mo-ease); }
+.cs-callout, .cs-persona { transition: translate .3s var(--mo-ease), box-shadow .3s; }
+
+/* ---------- Reduced motion / motion off: show everything, no movement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .mo-pre, [data-anno] .a-ph, [data-anno] .a-cap, [data-anno] .a-note, [data-anno] .a-lines circle,
+  [data-uc] svg *, .cs-stage-limits img, .cs-stage-limits .live-chg, .cs-stage-limits .live-hrt, .cs-stage-fm .f-upgrade, .cs-stage-fm .f-giveup, .cs-stage-fm .f-typein { opacity: 1 !important; translate: 0 0 !important; scale: 1 !important; transition: none !important; }
+  [data-anno] .a-lines path { stroke-dashoffset: 0 !important; }
+  .cs-collage .cs-stage img, [data-uc] * { animation: none !important; }
+}
+[data-motion="off"] .mo-pre { opacity: 1; translate: 0 0; scale: 1; }
+
+/* ---------- StudySmarter treatments: live phones side by side, no step list ---------- */
+.cs-shots[data-flow].fl-set-host { display: block; padding: 36px clamp(16px, 4vw, 56px); }
+.fl-set { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 28px clamp(18px, 3.5vw, 48px); }
+.fl-fig { margin: 0; flex: 0 1 auto; width: clamp(150px, 22vw, 250px); }
+.fl-set[data-n="2"] .fl-fig { width: clamp(170px, 26vw, 280px); }
+.fl-fig figcaption { margin-top: 16px; text-align: center; font: 500 .85rem/1.35 var(--font-body); color: #3a3358; }
+.cs-blue .fl-fig figcaption { color: #1d2a4d; }
+@media (max-width: 640px) { .fl-fig, .fl-set[data-n="2"] .fl-fig { width: min(42vw, 200px); } }
+
+.fl-fig figcaption { white-space: normal; overflow: visible; text-overflow: clip; }
+.cs-block .fl-fig figcaption { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }
+
+/* ---------- StudySmarter Concept 1: tap the key counter, a popover opens; later a modal arrives with a dimmed overlay ----------
+   Built from the two exported screens (keys-2 = lesson list with the popover, keys-1 = dimmed list with the modal).
+   Pieces are cropped out of those images with background-position, so nothing new had to be exported. 1u = 1px of the 1560px-wide export. */
+.cs-shots-kz { display: flex; flex-wrap: wrap; gap: 20px; padding: 36px clamp(16px, 4vw, 56px); }
+.kz { --u: calc(100cqw / 1560); --T: 7s; container-type: inline-size; position: relative; flex: 1 1 300px; min-width: 0; aspect-ratio: 1560 / 964; overflow: hidden; border-radius: 1% / 1.7%; box-shadow: 0 10px 30px rgba(16, 24, 40, .12); background: #fafafa; }
+.kz-l { position: absolute; background-repeat: no-repeat; pointer-events: none; }
+.kz-base { inset: 0; background-image: url("case-studies/fluid-learn/screens/keys-2.webp?v=7"); background-size: 100% 100%; }
+.kz-patch { left: calc(798 * var(--u)); top: calc(112 * var(--u)); width: calc(356 * var(--u)); height: calc(310 * var(--u)); background: linear-gradient(#fff calc(276 * var(--u)), #f9f9f9 calc(276 * var(--u))); border-radius: 0 0 calc(14 * var(--u)) calc(14 * var(--u)); overflow: hidden; }
+.kz-ring { position: absolute; left: 0; top: 0; width: calc(366 * var(--u)); height: calc(223 * var(--u)); background: url("case-studies/fluid-learn/screens/keys-1.webp?v=7") no-repeat; background-size: calc(1588 * var(--u)) auto; background-position: calc(-812 * var(--u)) calc(-117 * var(--u)); filter: brightness(3); }
+.kz-pill { left: calc(1094 * var(--u)); top: calc(116 * var(--u)); width: calc(64 * var(--u)); height: calc(46 * var(--u)); background-image: url("case-studies/fluid-learn/screens/keys-2.webp?v=7"); background-size: calc(1560 * var(--u)) auto; background-position: calc(-1094 * var(--u)) calc(-116 * var(--u)); border-radius: calc(20 * var(--u)); }
+.kz-tap { left: calc(1126 * var(--u)); top: calc(139 * var(--u)); width: calc(70 * var(--u)); height: calc(70 * var(--u)); margin: calc(-35 * var(--u)) 0 0 calc(-35 * var(--u)); border-radius: 50%; border: calc(4 * var(--u)) solid rgba(41, 112, 255, .7); opacity: 0; }
+.kz-pop { left: calc(822 * var(--u)); top: calc(174 * var(--u)); width: calc(330 * var(--u)); height: calc(243 * var(--u)); background-image: url("case-studies/fluid-learn/screens/keys-2.webp?v=7"); background-size: calc(1560 * var(--u)) auto; background-position: calc(-822 * var(--u)) calc(-174 * var(--u)); border-radius: calc(26 * var(--u)); box-shadow: 0 calc(14 * var(--u)) calc(30 * var(--u)) rgba(16, 24, 40, .18); transform-origin: 92% 0; opacity: 0; }
+.kz-dim { inset: 0; background: rgba(2, 8, 16, .665); opacity: 0; }
+.kz-modal { left: calc(519 * var(--u)); top: calc(340 * var(--u)); width: calc(522 * var(--u)); height: calc(288 * var(--u)); background-image: url("case-studies/fluid-learn/screens/keys-1.webp?v=7"); background-size: calc(1588 * var(--u)) auto; background-position: calc(-533 * var(--u)) calc(-342 * var(--u)); border-radius: calc(16 * var(--u)); box-shadow: 0 calc(24 * var(--u)) calc(50 * var(--u)) rgba(0, 0, 0, .35); opacity: 0; overflow: hidden; }
+.kz-modal .shine { position: absolute; left: calc(26 * var(--u)); top: calc(214 * var(--u)); width: calc(470 * var(--u)); height: calc(48 * var(--u)); border-radius: 999px; overflow: hidden; }
+.kz-modal .shine::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, .5) 50%, transparent 65%); translate: -120% 0; }
+.kz.is-in .kz-pill { animation: kz-pill var(--T) infinite; }
+.kz.is-in .kz-tap { animation: kz-tap var(--T) infinite; }
+.kz.is-in .kz-pop { animation: kz-pop var(--T) infinite; }
+.kz.is-in .kz-dim { animation: kz-dim var(--T) infinite; }
+.kz.is-in .kz-modal { animation: kz-modal var(--T) infinite; }
+.kz.is-in .kz-modal .shine::after { animation: kz-shine var(--T) ease-in-out infinite; }
+@keyframes kz-pill { 0%, 11% { scale: 1; } 13% { scale: .86; } 16%, 100% { scale: 1; } }
+@keyframes kz-tap { 0%, 11% { opacity: 0; scale: .4; } 13% { opacity: 1; scale: .6; } 22%, 100% { opacity: 0; scale: 1.5; } }
+@keyframes kz-pop { 0%, 13% { opacity: 0; scale: .5; } 19% { opacity: 1; scale: 1.03; } 21%, 80% { opacity: 1; scale: 1; } 86%, 100% { opacity: 0; scale: .96; } }
+@keyframes kz-dim { 0%, 6% { opacity: 0; } 14%, 86% { opacity: 1; } 93%, 100% { opacity: 0; } }
+@keyframes kz-modal { 0%, 8% { opacity: 0; scale: .88; translate: 0 calc(24 * var(--u)); } 17% { opacity: 1; scale: 1.02; translate: 0 0; } 20%, 86% { opacity: 1; scale: 1; translate: 0 0; } 93%, 100% { opacity: 0; scale: .96; translate: 0 0; } }
+@keyframes kz-shine { 0%, 42% { translate: -120% 0; } 56%, 100% { translate: 120% 0; } }
+@media (prefers-reduced-motion: reduce) { .kz-l { animation: none !important; } .kz-pop { opacity: 1; } }
+
+/* step pills under each live phone: the playing step is highlighted and fills up */
+.fl-pills { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 4px; }
+.fl-pills li { position: relative; display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px; font: 500 .88rem/1.3 var(--font-body); color: #3a3358; opacity: .55; overflow: hidden; transition: opacity .3s, background .3s; }
+.cs-blue .fl-pills li { color: #1d2a4d; }
+.fl-pills li.is-on { opacity: 1; background: rgba(255, 255, 255, .62); }
+.fl-pills .n { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(255, 255, 255, .7); font-size: .75rem; font-weight: 600; transition: background .3s, color .3s; }
+.fl-pills li.is-on .n { background: var(--ink); color: #fff; }
+.fl-pills li.is-done .n { background: var(--cs-accent, #8c48f3); color: #fff; }
+.fl-pills .fill { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--ink); transform-origin: left; scale: 0 1; opacity: .8; }
+.fl-pills li.is-on .fill { animation: mf-fill var(--dwell, 4s) linear forwards; }
+.fl-pills li.is-done { opacity: .8; }
+
+/* cards float: hero, concept 2, concept 3 (concept 2 / 3 start once the cards have landed) */
+.cs-stage-limits.is-landed .l-charges, .cs-stage-limits.is-landed .l-hearts, .cs-stage-fm.is-landed .f-upgrade, .cs-stage-fm.is-landed .f-giveup, .cs-stage-fm.is-landed .f-typein { animation: mo-float 6.5s ease-in-out infinite; }
+.cs-stage-limits.is-landed .l-hearts { animation-delay: -2.2s; } .cs-stage-fm.is-landed .f-giveup { animation-delay: -2.2s; } .cs-stage-fm.is-landed .f-typein { animation-delay: -4.4s; }
+@media (prefers-reduced-motion: reduce) { .cs-stage-limits.is-landed *, .cs-stage-fm.is-landed * { animation: none !important; } }
+.fl-pills { justify-items: center; }
+.fl-pills li { display: block; padding: 10px 18px; text-align: center; opacity: 1; background: rgba(255, 255, 255, .62); border-radius: 999px; }
+.fl-pills li:not(.is-on) { opacity: .75; }
+
+/* StudySmarter treatments: one phone at a time, a pill per flow */
+.fl-one { display: flex; align-items: center; justify-content: center; gap: clamp(28px, 6vw, 80px); }
+.fl-stage { flex: none; width: clamp(190px, 25vw, 270px); }
+.fl-stage .fl-slot:not(.is-active) { display: none; }
+.fl-one .fl-pills { margin: 0; flex: 0 1 290px; min-width: 0; }
+.fl-one .fl-pills li { display: block; padding: 0; background: none; opacity: 1; border-radius: 12px; overflow: visible; }
+.fl-pill-btn { position: relative; display: grid; grid-template-columns: 30px 1fr; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 0; border-radius: 12px; background: transparent; text-align: left; cursor: pointer; font: 500 .95rem/1.3 var(--font-body); color: #3a3358; opacity: .55; overflow: hidden; transition: opacity .3s, background .3s; }
+.cs-blue .fl-pill-btn { color: #1d2a4d; }
+.fl-pill-btn.is-on { opacity: 1; background: rgba(255, 255, 255, .62); }
+.fl-pill-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.fl-pill-btn .n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, .7); font-size: .8rem; font-weight: 600; transition: background .3s, color .3s; }
+.fl-pill-btn.is-on .n { background: var(--ink); color: #fff; }
+.fl-pill-btn.is-done .n { background: var(--cs-accent, #8c48f3); color: #fff; }
+.fl-pill-btn .fill { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--ink); transform-origin: left; scale: 0 1; opacity: .8; }
+.fl-pill-btn.is-on .fill { animation: mf-fill var(--dwell, 6s) linear forwards; }
+@media (max-width: 640px) { .fl-one { flex-direction: column; gap: 22px; } .fl-stage { width: min(62vw, 240px); } .fl-one .fl-pills { display: flex; flex-wrap: wrap; justify-content: center; flex: none; } .fl-pill-btn { width: auto; padding: 8px 12px; grid-template-columns: 24px auto; font-size: .85rem; } }
+.fl-one .fl-pills { justify-items: stretch; } .fl-one .fl-pills li { width: 100%; } .fl-pill-btn { justify-content: start; }
+
+/* ---------- Lingobites hero: the four exercise cards pop in, then float (screens inside are already animated) ---------- */
+[data-cs-motion] .cs-hero-stage .cs-hero-comp > img { animation: mo-pop .95s var(--mo-spring) both, mo-float 6.5s ease-in-out 1.2s infinite; }
+[data-cs-motion] .cs-hero-stage .h-match { animation-delay: .1s, 1.4s; }
+[data-cs-motion] .cs-hero-stage .h-card { animation-delay: .3s, 2.2s; }
+[data-cs-motion] .cs-hero-stage .h-dlg { animation-delay: .5s, 3.1s; }
+[data-cs-motion] .cs-hero-stage .h-choice { animation-delay: .7s, 3.9s; }
+@media (prefers-reduced-motion: reduce) { [data-cs-motion] .cs-hero-stage .cs-hero-comp > img { animation: none !important; } }

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>midi.play thumbnail explorations</title>
+<style>
+  :root { --bg: #f4f1ec; --ink: #1a1a1a; --mute: #6b665e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 "Hanken Grotesk", system-ui, sans-serif; padding: 40px 24px 80px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .lede { color: var(--mute); margin: 0 0 40px; max-width: 60ch; }
+  .opt { display: grid; grid-template-columns: minmax(0, 640px) 300px; gap: 28px; align-items: end; margin-bottom: 56px; }
+  .opt h2 { grid-column: 1 / -1; font-size: 16px; margin: 0; }
+  .opt h2 small { font-weight: 400; color: var(--mute); margin-left: 8px; }
+  .cap { grid-column: 1 / -1; color: var(--mute); margin: -4px 0 0; max-width: 70ch; }
+  @media (max-width: 1000px) { .opt { grid-template-columns: 1fr; } .opt > .frame:nth-of-type(2) { max-width: 300px; } }
+
+  /* The thumbnail frame: same shape as midi-thumb.webp (2500 x 1594). Everything inside is sized in --u (1/1000 of the width). */
+  .frame { aspect-ratio: 2500 / 1594; border-radius: 14px; overflow: hidden; container-type: inline-size; position: relative; box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  .st { --u: calc(100cqw / 1000); position: absolute; inset: 0; overflow: hidden; }
+  .st > * { position: absolute; }
+  .st img, .st video { display: block; }
+
+  .fall { overflow: hidden; background: #2b2b30; }
+  .fall video { width: 100%; height: 100%; object-fit: cover; object-position: bottom; }
+  .grid { background-color: #161618; background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px); background-size: calc(64 * var(--u)) calc(64 * var(--u)); }
+  .px { image-rendering: pixelated; animation: bob 1.2s steps(2, jump-none) infinite; }
+  .px.b { animation-delay: -.4s; } .px.c { animation-delay: -.8s; }
+  @keyframes bob { 0% { transform: translateY(0); } 50% { transform: translateY(calc(-8 * var(--u))); } 100% { transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .px { animation: none; } }
+
+  /* A */
+  .A .st { background: linear-gradient(180deg, #3f8ff0 0%, #86aedb 45%, #d9bfa0 78%, #f0c49a 100%); }
+  .A .win { left: calc(60 * var(--u)); top: calc(78 * var(--u)); width: calc(720 * var(--u)); border-radius: calc(14 * var(--u)); overflow: hidden; box-shadow: 0 calc(24 * var(--u)) calc(50 * var(--u)) rgba(20,30,60,.35); }
+  .A .win img, .A .win video { width: 100%; }
+  .A .fall { left: calc(500 * var(--u)); top: calc(318 * var(--u)); width: calc(440 * var(--u)); height: calc(230 * var(--u)); border-radius: calc(14 * var(--u)); transform: rotate(-6deg); box-shadow: 0 calc(26 * var(--u)) calc(44 * var(--u)) rgba(10,15,40,.5), 0 0 0 calc(2 * var(--u)) rgba(255,255,255,.08); }
+
+  /* B */
+  .B .st { background: #ee4f23; }
+  .B .panel { left: 0; top: 0; width: calc(690 * var(--u)); height: 100%; overflow: hidden; background: #161618; border-radius: 0 calc(22 * var(--u)) calc(22 * var(--u)) 0; }
+  .B .panel img, .B .panel video { position: absolute; width: calc(800 * var(--u)); left: calc(-6 * var(--u)); top: calc(-34 * var(--u)); max-width: none; }
+  .B .fall { left: calc(500 * var(--u)); top: calc(330 * var(--u)); width: calc(440 * var(--u)); height: calc(230 * var(--u)); border-radius: calc(16 * var(--u)); box-shadow: calc(10 * var(--u)) calc(12 * var(--u)) 0 #111; }
+
+  /* C */
+  .C .st { background: #161618; }
+  .C .st.grid { background-color: #161618; }
+  .C .line { left: calc(190 * var(--u)); top: calc(40 * var(--u)); width: calc(620 * var(--u)); height: calc(65 * var(--u)); overflow: hidden; }
+  .C .line img { position: absolute; width: calc(1000 * var(--u)); max-width: none; left: calc(-12 * var(--u)); top: calc(-440 * var(--u)); }
+  .C .fall { left: calc(150 * var(--u)); top: calc(268 * var(--u)); width: calc(700 * var(--u)); height: calc(366 * var(--u)); border-radius: calc(18 * var(--u)); box-shadow: 0 0 calc(60 * var(--u)) rgba(238,79,35,.25); }
+  .C .px { width: calc(140 * var(--u)); top: calc(150 * var(--u)); }
+
+  /* D */
+  .D .st { background: #161618; }
+  .D .hero { left: 0; top: 0; width: 100%; height: calc(300 * var(--u)); overflow: hidden; }
+  .D .hero img, .D .hero video { position: absolute; width: calc(1000 * var(--u)); max-width: none; left: calc(70 * var(--u)); top: calc(-66 * var(--u)); }
+  .D .fall { left: 0; top: calc(236 * var(--u)); width: 100%; height: calc(402 * var(--u)); -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 42%); mask-image: linear-gradient(180deg, transparent 0, #000 42%); background: none; }
+
+  /* E */
+  .E .line { left: calc(60 * var(--u)); top: calc(110 * var(--u)); width: calc(880 * var(--u)); height: calc(92 * var(--u)); overflow: hidden; }
+  .E .line img { position: absolute; width: calc(1410 * var(--u)); max-width: none; left: calc(-18 * var(--u)); top: calc(-620 * var(--u)); }
+  .E .fall { left: calc(300 * var(--u)); top: calc(300 * var(--u)); width: calc(400 * var(--u)); height: calc(209 * var(--u)); border-radius: calc(14 * var(--u)); box-shadow: calc(8 * var(--u)) calc(10 * var(--u)) 0 #ee4f23; }
+  .E .px { width: calc(130 * var(--u)); }
+</style>
+</head>
+<body>
+<h1>midi.play thumbnail explorations</h1>
+<p class="lede">Each option is shown big and at the small size it will actually be seen at. The hero is a real recording of the landing page (the characters move), and the falling-notes card is a real recording of the "Play along" step, so it moves.</p>
+<div id="out"></div>
+
+<script>
+const V = 'midi/falling-notes.mp4', H = 'midi/hero.webp', HC = 'midi/hero-clean.webp';
+const heroVid = `<video src="midi/hero.mp4" autoplay muted loop playsinline preload="auto"></video>`;
+const vid = `<video src="${V}" autoplay muted loop playsinline preload="auto"></video>`;
+const spr = (n, cls, style) => `<img class="px ${cls}" src="midi/sprite-${n}.webp" alt="" style="${style}">`;
+const u = (n) => `calc(${n} * var(--u))`;
+
+const OPTIONS = [
+  { id: 'A', name: 'Your idea', note: 'Hero in a browser window, the falling-notes card tilted on top, sky-to-peach gradient from your sketch.',
+    html: `<div class="st"><div class="win">${heroVid}</div><div class="fall">${vid}</div></div>` },
+  { id: 'B', name: 'Hero bleeding off the edge', note: 'No browser frame, so it feels less like a website. The hero fills the left and runs off the frame; the card sits on brand orange with the app\'s hard shadow.',
+    html: `<div class="st"><div class="panel">${heroVid}</div><div class="fall">${vid}</div></div>` },
+  { id: 'C', name: 'Band on the piano', note: 'The five pixel characters from the hero stand on a big piano-roll card that runs off the bottom. Keeps just one line of the headline.',
+    html: `<div class="st grid"><div class="line"><img src="${HC}" alt=""></div><div class="fall">${vid}</div>
+      ${spr('guitar', '', `left:${u(150)}`)}${spr('keys', 'b', `left:${u(290)}`)}${spr('drums', 'c', `left:${u(430)}`)}${spr('voice', 'b', `left:${u(570)}`)}${spr('bass', '', `left:${u(710)}`)}</div>` },
+  { id: 'D', name: 'Notes fall out of the hero', note: 'One continuous picture, no cards. The hero headline on top, and the notes fade in from it down to the keys.',
+    html: `<div class="st"><div class="hero">${heroVid}</div><div class="fall">${vid}</div></div>` },
+  { id: 'E', name: 'One line and one card', note: 'The most minimal. Just "Start playing." with a small card floating under it and two characters perched on the edge. Reads best when tiny.',
+    html: `<div class="st grid"><div class="line"><img src="${HC}" alt=""></div><div class="fall">${vid}</div>
+      ${spr('voice', 'b', `left:${u(310)};top:${u(192)}`)}${spr('bass', '', `left:${u(560)};top:${u(192)}`)}</div>` },
+];
+
+document.getElementById('out').innerHTML = OPTIONS.map((o) => `
+  <section class="opt ${o.id}">
+    <h2>${o.id}. ${o.name}</h2>
+    <div class="frame">${o.html}</div>
+    <div class="frame">${o.html}</div>
+    <p class="cap">${o.note}</p>
+  </section>`).join('');
+</script>
+</body>
+</html>

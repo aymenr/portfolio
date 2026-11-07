@@ -1,0 +1,26 @@
+@import url("alice.css");
+
+/* Alice · Hero + About — Alice · Final with the intro and the About me text in one opening section.
+   script.js moves the About text into the hero while this style is on, and back out when it isn't. */
+
+.hero { grid-template-columns: minmax(0, var(--leftcol)) minmax(0, 1fr); column-gap: var(--cgap); row-gap: 14px; align-content: start; min-height: 0; padding-block: 64px 24px; }
+.hero > * { grid-column: 1 / -1; }
+.hero > .hero-title { max-width: 30ch; }
+.hero-interest { display: none; } /* the About text below already opens with this sentence */
+
+/* portrait on the left, About text on the right, under the statement */
+.hero > .hero-portrait { display: block; grid-column: 1; margin-top: 44px; width: 200px; aspect-ratio: 1; border-radius: 50%; overflow: hidden; }
+.hero > .about-text { grid-column: 2; margin-top: 44px; }
+.hero > .about-text .lede { margin: 0; }
+
+/* the About section keeps only the other-creative-work wall */
+.about { padding-block: 72px 0; }
+.about-body { display: none; }
+.mast-nav a[href="#about"] { display: none; }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; padding-block: 48px 8px; }
+  .hero > .hero-portrait, .hero > .about-text { grid-column: 1; margin-top: 28px; }
+  .hero > .hero-portrait { width: 136px; }
+  .hero > .about-text { margin-top: 12px; }
+}

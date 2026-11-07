@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Thumbnail canvas</title>
+<style>
+  :root { --ink: #1c1b22; --muted: #7b7a86; --panel: #fff; --line: rgba(0,0,0,.09); }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; color: var(--ink);
+    background: #ecebf0 radial-gradient(circle, rgba(0,0,0,.13) 1px, transparent 1.5px) 0 0 / 24px 24px; }
+  header.bar { position: sticky; top: 0; z-index: 10; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    padding: 12px 28px; background: rgba(255,255,255,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  header.bar h1 { font-size: 15px; margin: 0; flex: 1; }
+  header.bar span.hint { color: var(--muted); font-size: 12px; }
+  button { font: inherit; font-size: 12px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; color: var(--ink); }
+  button:hover { background: #f4f3f8; } button:disabled { opacity: .4; cursor: default; }
+  button.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+  main { padding: 28px; display: grid; gap: 40px; }
+  .frame-label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  /* thumbnails */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; align-items: start; }
+  .tile { background: var(--panel); border-radius: 16px; padding: 12px; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 24px -12px rgba(0,0,0,.18); outline: 3px solid transparent; transition: outline-color .15s; }
+  .tile.sel { outline-color: #3d6ff0; }
+  .art { position: relative; border-radius: 10px; overflow: hidden; background: var(--g); cursor: pointer; }
+  .art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6%; }
+  .art.framed img { padding: 7%; filter: drop-shadow(0 12px 22px rgba(0,0,0,.28)); border-radius: 0; }
+  .tile h3 { margin: 12px 4px 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .tile h3 .sp { flex: 1; }
+  .tile h3 .badge { font-weight: 500; font-size: 11px; color: var(--muted); }
+  .ctl { display: grid; gap: 8px; padding: 4px; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .row label { width: 54px; font-size: 11px; color: var(--muted); }
+  .row input[type=range] { flex: 1; min-width: 0; }
+  .row input[type=color] { width: 34px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: none; }
+  .row output { width: 38px; text-align: right; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .chips { display: flex; gap: 6px; } .chips button { padding: 3px 9px; } .chips button.on { background: var(--ink); color: #fff; }
+  code { display: block; font-size: 10px; color: var(--muted); word-break: break-all; user-select: all; padding: 0 4px 4px; }
+  /* skies */
+  .skies { display: grid; gap: 22px; }
+  .time { background: var(--panel); border-radius: 16px; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .time header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .time header h3 { margin: 0; font-size: 14px; } .time header small { color: var(--muted); flex: 1; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .sw { position: relative; aspect-ratio: 4 / 5; border-radius: 12px; border: 0; padding: 0; overflow: hidden; background: var(--g); cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); transition: transform .15s; }
+  .sw:hover { transform: translateY(-2px); }
+  .sw .sun { position: absolute; left: var(--sx); top: var(--sy); width: 26%; aspect-ratio: 1; border-radius: 50%; translate: -50% -50%;
+    background: var(--sun); filter: blur(var(--sb, 6px)); opacity: var(--so, 1); }
+  .sw .cloud { position: absolute; left: -10%; right: -10%; bottom: 14%; height: 24%; border-radius: 50%; background: rgba(255,255,255,var(--ca,.28)); filter: blur(14px); }
+  .sw .cloud.b { bottom: 32%; left: 18%; right: -30%; height: 14%; opacity: .7; }
+  .sw .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 18px 10px 8px; text-align: left; font-size: 11px; font-weight: 600; color: #fff;
+    background: linear-gradient(transparent, rgba(0,0,0,.42)); text-shadow: 0 1px 2px rgba(0,0,0,.3); }
+  .toast { position: fixed; left: 50%; bottom: 24px; translate: -50% 0; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 12px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .toast.on { opacity: 1; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1>Thumbnail canvas</h1>
+  <span class="hint" id="hint">Click a thumbnail to select it, then click any sky below to paint it. Fine-tune with the sliders.</span>
+  <button id="copyAll">Copy CSS for all</button>
+  <button id="resetAll">Reset all</button>
+</header>
+<main>
+  <section>
+    <p class="frame-label">Thumbnails</p>
+    <div class="tiles" id="tiles"></div>
+  </section>
+  <section>
+    <p class="frame-label">Sky colours through the day · click one to paint the selected thumbnail</p>
+    <div class="skies" id="skies"></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+/* Each thumbnail: its picture(s) and the gradient the site uses today (index.html card order). */
+const TILES = [
+  { id: 'midi',        name: 'midi.play',     ar: '4 / 3', imgs: [['Thumbnail', 'midi-thumb.webp'], ['Gameplay', 'midi-play.webp']], framed: true, g: { angle: 180, c: ['#3d8ef0', '#8fc8ff', '#ffc48a'], mid: 55 } },
+  { id: 'lingoda-app', name: 'Lingoda app',   ar: '3 / 4', imgs: [['Items', 'mobile-app-items.webp'], ['Full', 'mobile-app.webp']],          g: { angle: 180, c: ['#3fc3e6', '#a2e6f2', '#eafaf0'], mid: 55 } },
+  { id: 'monetisation',name: 'Fluid Learn',   ar: '4 / 5', imgs: [['Items', 'monetisation-items.webp'], ['Illustration', 'fluid-illustration.webp'], ['Full', 'monetisation-experiments.webp']], g: { angle: 180, c: ['#7a86ee', '#bfb0f4', '#f6d3ea'], mid: 55 } },
+  { id: 'lingobites',  name: 'Lingobites',    ar: '1 / 1', imgs: [['Items', 'lingobites-items.webp'], ['Full', 'lingobites.webp']],           g: { angle: 180, c: ['#ff8fb2', '#ffb9c4', '#ffe2cc'], mid: 55 } },
+  { id: 'seda',        name: 'Seda Speech',   ar: '4 / 3', imgs: [['Items', 'seda-items.webp'], ['Thumb', 'seda-thumb.webp'], ['Full', 'seda-speech.webp']], g: { angle: 180, c: ['#ffd25a', '#ffe8a6', '#fff6d6'], mid: 55 } },
+];
+
+/* Sky palettes: [name, top, middle, bottom, sun colour, sun x%, sun y%, sun opacity, cloud strength]. Top is high in the sky, bottom is the horizon. */
+const SKY = [
+  ['Night', 'after dark', [
+    ['Clear', '#070b24', '#1a2a6c', '#3b4f9e', '#dfe8ff', 78, 18, .9, .05],
+    ['Moonlit', '#0b1635', '#26407a', '#6f8fc4', '#f4f1dc', 24, 22, 1, .1],
+    ['Violet', '#140a30', '#3a1f6b', '#8a4fa0', '#ffd6f0', 70, 26, .55, .08],
+    ['Aurora', '#04141f', '#0c4a56', '#2f9a8a', '#c9ffe9', 50, 20, .35, .06]]],
+  ['Pre-dawn', 'blue hour before sunrise', [
+    ['Indigo', '#1b2250', '#5b4b8f', '#d98a9a', '#ffd0c0', 50, 88, .5, .1],
+    ['Blush', '#2a2a5e', '#8a6aa5', '#f2b3b0', '#ffe2d0', 50, 90, .6, .14],
+    ['Cold', '#1a2b4f', '#4d6f9c', '#a9c0d6', '#eef4ff', 30, 88, .4, .12],
+    ['Ember', '#2b1d4a', '#8a3f6e', '#f08a5a', '#ffb070', 50, 92, .7, .1]]],
+  ['Sunrise', 'sun on the horizon', [
+    ['Peach', '#6f8fd8', '#f4b6a6', '#ffd9a0', '#fff2c0', 50, 84, .9, .22],
+    ['Rose', '#8a7ad8', '#f5a3b8', '#ffd2b0', '#fff0d0', 28, 86, .85, .2],
+    ['Gold', '#4f9ae0', '#ffd08a', '#ff9a5a', '#fff6c8', 70, 85, 1, .14],
+    ['Mist', '#a9c4e6', '#f0d4d4', '#fff0d8', '#ffffff', 50, 82, .7, .35]]],
+  ['Morning', 'fresh light', [
+    ['Fresh', '#4aa3f0', '#9fd0ff', '#e6f4ff', '#fffbe0', 80, 18, .8, .2],
+    ['Mint', '#5bc0d8', '#a8e4dc', '#f0fbe8', '#fffbe0', 20, 20, .7, .22],
+    ['Hazy', '#8fb4de', '#c9d9ea', '#f2ece4', '#fffaf0', 70, 24, .6, .4],
+    ['Lilac', '#8f9cf0', '#c9c0f2', '#f6e6f0', '#fff6ee', 50, 22, .6, .25]]],
+  ['Midday', 'sun overhead', [
+    ['Deep blue', '#1f78e8', '#5aa8f5', '#b7dcff', '#ffffff', 50, 12, .9, .15],
+    ['Cobalt', '#1553c9', '#3f8ae8', '#94c4f5', '#ffffff', 74, 12, .9, .12],
+    ['Cyan', '#12a4d8', '#5fd0ea', '#c8f2f6', '#ffffff', 28, 14, .85, .2],
+    ['Washed', '#5f9be0', '#a9cdf0', '#e8f2fb', '#ffffff', 50, 14, .8, .45]]],
+  ['Afternoon', 'warming up', [
+    ['Clear', '#3d8ef0', '#8fc8ff', '#ffc48a', '#fff4d0', 80, 30, .7, .18],
+    ['Cloud-white', '#7fb2e8', '#cfe2f4', '#f7f2ea', '#ffffff', 30, 28, .5, .5],
+    ['Warm', '#5a9be8', '#b8d0ec', '#f6d2b0', '#fff0d0', 76, 34, .7, .22],
+    ['Summer', '#2f9fe0', '#86d0e8', '#f8e6b8', '#fffbe0', 24, 30, .8, .2]]],
+  ['Golden hour', 'low, warm sun', [
+    ['Amber', '#5f9cee', '#f2c39a', '#ff9f7e', '#fff0b0', 28, 70, .9, .2],
+    ['Honey', '#ffc65a', '#ffa56e', '#ff8a8a', '#fff6c0', 50, 78, .9, .16],
+    ['Copper', '#7aa0d8', '#f0b88a', '#e8805a', '#ffe6b0', 72, 72, .85, .2],
+    ['Soft gold', '#9cc0ec', '#f8dcaa', '#ffc080', '#fffae0', 50, 74, .8, .3]]],
+  ['Sunset', 'sun going down', [
+    ['Flame', '#3a4a9e', '#e8647a', '#ffb347', '#ffe0a0', 50, 88, 1, .14],
+    ['Magenta', '#5a3a9e', '#e85a9a', '#ffa070', '#ffd8b0', 30, 88, .9, .14],
+    ['Coral', '#7a6ad8', '#ff8a8a', '#ffd08a', '#fff0c0', 70, 86, .9, .2],
+    ['Crimson', '#2a2a6e', '#c8365a', '#ff7a3a', '#ffc080', 50, 90, 1, .1]]],
+  ['Dusk', 'last light', [
+    ['Violet', '#2a2f7a', '#7a4aa0', '#e87a8a', '#ffc0b0', 50, 92, .5, .1],
+    ['Blue hour', '#1a3a8a', '#4a6fc0', '#a9b8e8', '#e8f0ff', 24, 90, .4, .12],
+    ['Plum', '#3a2a6a', '#8a3a8a', '#f07a9a', '#ffc0d0', 72, 92, .5, .1],
+    ['Lavender', '#6a6ad0', '#b49ae8', '#f5c0d8', '#fff0f4', 50, 88, .5, .26]]],
+];
+
+const $ = (s, el = document) => el.querySelector(s);
+const store = { get: (k) => { try { return JSON.parse(localStorage.getItem('thumbcanvas-' + k)); } catch { return null; } }, set: (k, v) => localStorage.setItem('thumbcanvas-' + k, JSON.stringify(v)) };
+const css = (g) => `linear-gradient(${g.angle}deg, ${g.c[0]} 0%, ${g.c[1]} ${g.mid}%, ${g.c[2]} 100%)`;
+const saved = store.get('state') || {};
+const S = Object.fromEntries(TILES.map((t) => [t.id, { g: structuredClone(saved[t.id]?.g || t.g), img: saved[t.id]?.img ?? 0 }]));
+let selected = store.get('selected') || TILES[0].id;
+const persist = () => { store.set('state', S); store.set('selected', selected); };
+const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 1400); };
+const copy = (text) => (navigator.clipboard?.writeText(text) || Promise.reject()).catch(() => { const a = document.createElement('textarea'); a.value = text; document.body.append(a); a.select(); document.execCommand('copy'); a.remove(); });
+
+function renderTiles() {
+  $('#tiles').innerHTML = TILES.map((t) => `
+    <article class="tile" data-id="${t.id}">
+      <div class="art ${t.framed ? 'framed' : ''}" style="aspect-ratio:${t.ar}"><img alt="${t.name}" draggable="false"></div>
+      <h3>${t.name}<span class="badge" data-badge></span><span class="sp"></span>
+        <span class="chips">${t.imgs.map(([n], i) => `<button type="button" data-img="${i}">${n}</button>`).join('')}</span></h3>
+      <div class="ctl">
+        <div class="row"><label>Colours</label><input type="color" data-k="0" aria-label="Top"><input type="color" data-k="1" aria-label="Middle"><input type="color" data-k="2" aria-label="Bottom"></div>
+        <div class="row"><label>Angle</label><input type="range" data-k="angle" min="0" max="360" step="5"><output data-o="angle"></output></div>
+        <div class="row"><label>Middle at</label><input type="range" data-k="mid" min="5" max="95"><output data-o="mid"></output></div>
+        <div class="row"><button type="button" data-act="copy">Copy CSS</button><button type="button" data-act="reset">Reset</button></div>
+        <code></code>
+      </div>
+    </article>`).join('');
+  TILES.forEach(update);
+}
+
+function update(t) {
+  const el = $(`.tile[data-id="${t.id}"]`), s = S[t.id], g = s.g;
+  el.classList.toggle('sel', selected === t.id);
+  $('.art', el).style.setProperty('--g', css(g));
+  $('.art img', el).src = t.imgs[s.img][1];
+  el.querySelectorAll('[data-img]').forEach((b) => b.classList.toggle('on', +b.dataset.img === s.img));
+  g.c.forEach((c, i) => { const inp = $(`[data-k="${i}"]`, el); if (document.activeElement !== inp) inp.value = c; });
+  ['angle', 'mid'].forEach((k) => { const inp = $(`[data-k="${k}"]`, el); if (document.activeElement !== inp) inp.value = g[k]; $(`[data-o="${k}"]`, el).textContent = g[k] + (k === 'angle' ? '°' : '%'); });
+  $('code', el).textContent = `--g: ${css(g)};`;
+  $('[data-act="reset"]', el).disabled = JSON.stringify(g) === JSON.stringify(t.g);
+}
+
+$('#tiles').addEventListener('input', (e) => {
+  const el = e.target.closest('.tile'); if (!el) return;
+  const t = TILES.find((x) => x.id === el.dataset.id), g = S[t.id].g, k = e.target.dataset.k;
+  if (k === 'angle' || k === 'mid') g[k] = +e.target.value; else g.c[+k] = e.target.value;
+  selected = t.id; persist(); TILES.forEach(update);
+});
+$('#tiles').addEventListener('click', (e) => {
+  const el = e.target.closest('.tile'); if (!el) return;
+  const t = TILES.find((x) => x.id === el.dataset.id), b = e.target.closest('button');
+  if (b?.dataset.img) S[t.id].img = +b.dataset.img;
+  else if (b?.dataset.act === 'reset') S[t.id].g = structuredClone(t.g);
+  else if (b?.dataset.act === 'copy') { copy(`--g: ${css(S[t.id].g)};`); toast('Copied ' + t.name); }
+  selected = t.id; persist(); TILES.forEach(update);
+});
+
+/* sky swatches */
+function skyG([, top, mid, bot]) { return { angle: 180, c: [top, mid, bot], mid: 55 }; }
+function paint(t, sky) { const g = skyG(sky); S[t].g = g; persist(); TILES.forEach(update); }
+
+function renderSkies() {
+  $('#skies').innerHTML = SKY.map(([time, note, list], ti) => `
+    <div class="time"><header><h3>${time}</h3><small>${note}</small><button type="button" data-all="${ti}">Try on all thumbnails</button></header>
+      <div class="swatches">${list.map((s, vi) => {
+        const [name, top, mid, bot, sun, sx, sy, so, ca] = s;
+        return `<button type="button" class="sw" data-t="${ti}" data-v="${vi}" style="--g:${css(skyG(s))};--sun:${sun};--sx:${sx}%;--sy:${sy}%;--so:${so};--ca:${ca}" aria-label="${time} ${name}">
+          <i class="sun"></i><i class="cloud"></i><i class="cloud b"></i><span class="cap">${name}</span></button>`;
+      }).join('')}</div></div>`).join('');
+}
+$('#skies').addEventListener('click', (e) => {
+  const sw = e.target.closest('.sw'), all = e.target.closest('[data-all]');
+  if (sw) { paint(selected, SKY[sw.dataset.t][2][sw.dataset.v]); toast(`${SKY[sw.dataset.t][0]} · ${SKY[sw.dataset.t][2][sw.dataset.v][0]}`); }
+  if (all) { const list = SKY[all.dataset.all][2]; TILES.forEach((t, i) => { S[t.id].g = skyG(list[i % list.length]); }); persist(); TILES.forEach(update); toast(SKY[all.dataset.all][0] + ' on all'); }
+});
+
+$('#copyAll').onclick = () => { copy(TILES.map((t, i) => `.card[data-i="${i}"] { --g: ${css(S[t.id].g)}; } /* ${t.name} */`).join('\n')); toast('Copied CSS for all five'); };
+$('#resetAll').onclick = () => { TILES.forEach((t) => { S[t.id].g = structuredClone(t.g); }); persist(); TILES.forEach(update); };
+
+renderTiles(); renderSkies();
+</script>
+</body>
+</html>

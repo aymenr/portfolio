@@ -1,0 +1,102 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Lingoda image check</title>
+<link rel="stylesheet" href="thumb-motion.css?nocache=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body { font: 14px/1.4 system-ui, sans-serif; margin: 24px; background: #eee; color: #111; }
+  h2 { margin: 28px 0 8px; font-size: 16px; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  figure { margin: 0; background: #fff; padding: 8px; border-radius: 8px; }
+  figure img { display: block; width: 260px; height: auto; }
+  figure.wide img { width: 520px; }
+  figcaption { font-size: 12px; margin-top: 6px; color: #444; }
+  .big img { width: auto; max-width: none; }
+  .scroll { overflow: auto; max-width: 100%; background: #fff; padding: 8px; border-radius: 8px; }
+  .live { background: #fff; padding: 12px; border-radius: 8px; }
+  .ctl { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; font-size: 13px; }
+  .media { position: relative; display: grid; border-radius: 28px; overflow: hidden; aspect-ratio: 3 / 4; background: linear-gradient(180deg, #3fc3e6, #e9b8d4 60%, #f7d7b5); }
+  .media > .scene { grid-area: 1 / 1; }
+  .no-shadow .ph { filter: none !important; }
+  .no-zoom .ld-zoom { transform: none !important; }
+  .no-bob .ph, .no-bob .ph * { animation: none !important; }
+  .hint { color: #555; font-size: 12px; margin: 4px 0 0; }
+</style>
+<h1>Lingoda thumbnail: which images are used</h1>
+<p>Each image is shown at a normal size. Click one to see it at its full pixel size. The caption fills in its real pixel size and file.</p>
+
+<h2>0. Live copy of the home-screen thumbnail (animated)</h2>
+<div class="live">
+  <div class="ctl">
+    <label>Card width <input id="w" type="range" min="240" max="900" value="480"> <b id="wv">480</b> px</label>
+    <label><input type="checkbox" id="t-shadow"> remove drop shadow filter</label>
+    <label><input type="checkbox" id="t-zoom"> remove the 0.8 zoom</label>
+    <label><input type="checkbox" id="t-bob"> stop the floating</label>
+    <span id="dpr"></span>
+  </div>
+  <div id="media" class="media" style="width:480px"></div>
+  <p class="hint">This is the same scene the home page builds (sceneLingodaD), with the same CSS. Try each switch and see which one makes the screens sharper.</p>
+</div>
+
+<h2>1. Animated card (default, variant d): mobile-app-v2/</h2>
+<div class="row" id="a"></div>
+
+<h2>2. Still card (motion off): mobile-app-items.webp</h2>
+<div class="row" id="b"></div>
+
+<h2>3. Old versions, for comparison</h2>
+<div class="row" id="c"></div>
+
+<h2>4. Swipe slide images (still the old 3x size)</h2>
+<div class="row" id="d"></div>
+
+<h2>Full size (click an image above)</h2>
+<div class="scroll"><img id="full" alt=""></div>
+
+<script src="thumb-motion.js?nocache=1"></script>
+<script src="thumb-variants.js?nocache=1"></script>
+<script>
+  const media = document.getElementById('media');
+  media.innerHTML = thumbScene('lingoda-app', 'd') || '<p>scene failed to build</p>';
+  const sc = media.querySelector('.scene'); if (sc) sc.setAttribute('data-play', '');
+  const w = document.getElementById('w');
+  w.oninput = () => { media.style.width = w.value + 'px'; document.getElementById('wv').textContent = w.value; };
+  for (const [id, cls] of [['t-shadow', 'no-shadow'], ['t-zoom', 'no-zoom'], ['t-bob', 'no-bob']])
+    document.getElementById(id).onchange = (e) => media.classList.toggle(cls, e.target.checked);
+  // test hooks: ?fix=shadow,zoom,bob,rise,all  &freeze=1  &w=700
+  const q = new URLSearchParams(location.search), fx = (q.get('fix') || '').split(',');
+  const st = document.createElement('style');
+  st.textContent = `
+    .fx-rise .rise { animation: none !important; }
+    .fx-all .rise, .fx-all .ph { animation: none !important; }
+  `;
+  document.head.append(st);
+  if (q.get('w')) { w.value = q.get('w'); w.oninput(); }
+  for (const f of fx) { if (f === 'shadow') media.classList.add('no-shadow'); if (f === 'zoom') media.classList.add('no-zoom'); if (f === 'bob') media.classList.add('no-bob'); if (f === 'rise') media.classList.add('fx-rise'); if (f === 'all') media.classList.add('fx-all'); }
+  if (q.get('freeze')) setTimeout(() => { media.querySelectorAll('*').forEach((el) => el.getAnimations().forEach((a) => { a.pause(); a.currentTime = 3000; })); }, 2500);
+  document.getElementById('dpr').textContent = 'screen pixel ratio: ' + devicePixelRatio;
+</script>
+<script>
+  const v = Date.now();
+  const sets = {
+    a: ['mobile-app-v2/course.webp', 'mobile-app-v2/today.webp', 'mobile-app-v2/onboarding.webp'],
+    b: ['mobile-app-items.webp'],
+    c: ['mobile-app-v2/_prev/course.webp', 'mobile-app-v2/_prev/today.webp', 'mobile-app-v2/_prev/onboarding.webp', 'mobile-app-items-old.webp'],
+    d: ['mobile-app-v2/s2/plate.webp', 'mobile-app-v2/s3/plate.webp'],
+  };
+  for (const [id, files] of Object.entries(sets)) {
+    for (const f of files) {
+      const fig = document.createElement('figure');
+      if (f.includes('items')) fig.className = 'wide';
+      const img = new Image();
+      img.src = f + '?nocache=' + v;
+      const cap = document.createElement('figcaption');
+      cap.textContent = f + ' …';
+      img.onload = () => { cap.textContent = f + ' · ' + img.naturalWidth + ' × ' + img.naturalHeight + ' px'; };
+      img.onerror = () => { cap.textContent = f + ' · FAILED TO LOAD'; };
+      img.onclick = () => { document.getElementById('full').src = img.src; };
+      fig.append(img, cap);
+      document.getElementById(id).append(fig);
+    }
+  }
+</script>

@@ -1,0 +1,51 @@
+/* midi.play motion thumbnails: see thumb-midi.js. The scene fills the whole card and covers it (a little crop if the card is not 4:3). */
+.card-media:has(.scene-midi) { padding: 0 !important; overflow: hidden; }
+[data-display="bento"] .card-media > .scene-midi { padding: 0; }
+.scene-midi { overflow: hidden; }
+.scene-midi .stage { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: max(100cqw, calc(100cqh * var(--ar))); }   /* centred on the card, covering it at any card shape */
+.scene-midi .st-bg, .scene-midi .stage { --u: var(--p); }
+.scene-midi video, .scene-midi img { display: block; max-width: none; }
+
+.md { background: #161618; }
+.md.ma { background: linear-gradient(180deg, #3f8ff0 0%, #86aedb 45%, #d9bfa0 78%, #f0c49a 100%); }
+.md.mb { background: #ee4f23; }
+.md.mc, .md.me { background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px); background-size: calc(64 * var(--p)) calc(64 * var(--p)); }
+
+.mfall { position: absolute; overflow: hidden; background: #2b2b30; border-radius: calc(14 * var(--p)); }
+.mfall video { width: 100%; height: 100%; object-fit: cover; object-position: bottom; }
+.ma .mfall { transform: rotate(-6deg); box-shadow: 0 calc(26 * var(--p)) calc(44 * var(--p)) rgba(10,15,40,.5), 0 0 0 calc(2 * var(--p)) rgba(255,255,255,.08); }
+.mb .mfall { border-radius: calc(16 * var(--p)); box-shadow: calc(10 * var(--p)) calc(12 * var(--p)) 0 #111; }
+.mc .mfall { border-radius: calc(18 * var(--p)); box-shadow: 0 0 calc(60 * var(--p)) rgba(238,79,35,.25); }
+.me .mfall { box-shadow: calc(8 * var(--p)) calc(10 * var(--p)) 0 #ee4f23; }
+.mfall.fade { border-radius: 0; background: none; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 42%); mask-image: linear-gradient(180deg, transparent 0, #000 42%); }
+
+.mwin { position: absolute; border-radius: calc(14 * var(--p)); overflow: hidden; box-shadow: 0 calc(24 * var(--p)) calc(50 * var(--p)) rgba(20,30,60,.35); }
+.mwin video { width: 100%; }
+.mpanel { position: absolute; left: 0; top: 0; height: 100%; overflow: hidden; background: #161618; border-radius: 0 calc(22 * var(--p)) calc(22 * var(--p)) 0; }
+.mhero { position: absolute; }
+.mhero video { width: 100%; }
+.md-d .mhero { clip-path: inset(0 0 calc(245 * var(--p)) 0); }   /* stops under "Choose your part." so the third line never shows through the fade */
+.stage.md-d { overflow: hidden; }
+
+.mline { position: absolute; overflow: hidden; }
+.mline img { position: absolute; }
+.mpx { position: absolute; image-rendering: pixelated; animation: mpx-bob 1.2s steps(2, jump-none) infinite; animation-delay: calc(var(--i, 0) * -.4s); }
+@keyframes mpx-bob { 0% { transform: translateY(0); } 50% { transform: translateY(calc(-8 * var(--p))); } 100% { transform: translateY(0); } }
+
+.mfull { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.md.mf { background: transparent; }
+
+/* Backgrounds for option F, chosen in the panel's "MIDI Play bg" dropdown (html[data-midibg]). The card background reads --g (alice.css). */
+html[data-midibg="softsky"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: linear-gradient(180deg, #6aaaf6 0%, #cfe6ff 55%, #ffe6c9 100%); }
+html[data-midibg="sunrise"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: linear-gradient(180deg, #ffd08a 0%, #ff9fb2 52%, #b59cf6 100%); }
+html[data-midibg="mint"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: radial-gradient(50% 36% at 22% 24%, #e6fbe2, transparent), radial-gradient(44% 36% at 78% 76%, #8fd9c9, transparent), #5aaea6; }
+html[data-midibg="orange"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: radial-gradient(62% 48% at 50% 78%, #ffb56e, transparent), linear-gradient(180deg, #f2652f, #e0431f); }
+/* darker ones */
+html[data-midibg="dusk"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: linear-gradient(180deg, #232a66 0%, #6f4797 52%, #e27a6a 100%); }
+html[data-midibg="dawn"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: linear-gradient(180deg, #1c3159 0%, #8a5584 48%, #f0a070 100%); }
+html[data-midibg="evening"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: linear-gradient(180deg, #0e1733 0%, #2b2d63 52%, #c85a58 100%); }
+html[data-midibg="midnight"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: radial-gradient(70% 48% at 50% 88%, #2f6a9c, transparent), linear-gradient(180deg, #080d1e, #101c3c); }
+html[data-midibg="ember"] .card:has(.scene-midi:is([data-variant="f"], [data-variant="g"])) { --g: radial-gradient(64% 50% at 50% 90%, #c2431f, transparent), linear-gradient(180deg, #170e10, #2b1514); }
+
+.mlive { position: relative; width: 100%; height: 100%; }

@@ -1,0 +1,8 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="./Dark Arrow">
+<mask id="stroke0_0_695" fill="white">
+<path d="M10 10L20 3.49691e-06L1.74846e-06 0L10 10Z"/>
+</mask>
+<path id="Arrow" d="M10 10L20 3.25849e-06L1.74846e-06 -2.38419e-07L10 10Z" stroke-width="2" stroke="#CDD2DC" mask="url(#stroke0_0_695)"/>
+</g>
+</svg>

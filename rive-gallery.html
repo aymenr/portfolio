@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lingoda Rive animations</title>
+<style>
+  :root { --bg:#f6f5f2; --card:#fff; --ink:#151515; --muted:#6b6b6b; --line:#e4e2dc; --accent:#2b5cff; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111; --card:#1b1b1b; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2c2c2c; --accent:#7d9bff; } }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; padding: 48px 16px 80px; }
+  main { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -.03em; }
+  .sub { color: var(--muted); margin: 8px 0 36px; }
+  h2 { font-size: 1.1rem; margin: 40px 0 14px; letter-spacing: -.01em; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .stage { aspect-ratio: 1; background: repeating-conic-gradient(rgba(128,128,128,.08) 0 25%, transparent 0 50%) 0 0/20px 20px; }
+  canvas { width: 100%; height: 100%; display: block; }
+  .info { padding: 12px 14px 14px; border-top: 1px solid var(--line); }
+  .name { font-weight: 600; }
+  .file { color: var(--muted); font-size: 12.5px; }
+  .meta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  button { font: inherit; font-size: 12.5px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  .row { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; align-items:center; }
+  select { font:inherit; font-size:12.5px; max-width:100%; padding:4px 8px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); }
+  .spd { font-size:12px; color:var(--muted); display:flex; gap:6px; align-items:center; margin-left:auto; }
+  .spd input { width:70px; }
+  .inputs { margin-top:10px; display:grid; gap:6px; font-size:12.5px; }
+  .inp label { display:flex; gap:8px; align-items:center; }
+  .inp input[type=range] { flex:1; }
+  .none, .state { color:var(--muted); font-size:12px; margin-top:6px; }
+  .err { color: #c0392b; font-size: 12.5px; padding: 12px 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Lingoda Rive animations</h1>
+  <p class="sub">Every compiled .riv file from the Lingoda work. Each card has a picker for what to play, play/pause, restart, a speed slider, and a control for every input the animation exposes (buttons, switches, sliders).</p>
+  <div id="root"></div>
+</main>
+
+<script src="rive/runtime/rive.js"></script>
+<script>
+rive.RuntimeLoader.setWasmUrl(new URL('rive/runtime/rive.wasm', location.href).href);
+const GROUPS = [
+  { title: 'Lingobites app', items: [
+    ['main-score.riv', 'Main score'],
+    ['sparkle.riv', 'Sparkle'],
+    ['perfect.riv', 'Perfect'],
+    ['good-work.riv', 'Good work'],
+    ['good-try.riv', 'Good try'],
+  ]},
+  { title: 'Vocabulary trainer (Frank)', items: [
+    ['vt-hello.riv', 'Hello'],
+    ['vt-perfect.riv', 'Perfect'],
+    ['vt-perfect-zoom.riv', 'Perfect, zoom version'],
+    ['vt-good-work.riv', 'Good work'],
+    ['vt-good-try.riv', 'Good try'],
+  ]},
+];
+
+const root = document.getElementById('root');
+
+function card(file, label) {
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.innerHTML = `<div class="stage"><canvas></canvas></div>
+    <div class="info"><div class="name">${label}</div><div class="file">rive/${file}</div>
+    <div class="meta"></div>
+    <div class="row"><select data-artboard title="Artboard"></select><select data-mode title="What to play"></select></div>
+    <div class="row"><button data-play>Pause</button><button data-replay>Restart</button>
+      <label class="spd">Speed <input type="range" min="0.1" max="3" step="0.1" value="1" data-speed><output>1×</output></label></div>
+    <div class="inputs"></div><div class="state"></div></div>`;
+  const $ = (q) => el.querySelector(q);
+  const canvas = $('canvas'), meta = $('.meta'), inputsBox = $('.inputs'), stateBox = $('.state');
+  const abSel = $('[data-artboard]'), modeSel = $('[data-mode]'), playBtn = $('[data-play]'), spd = $('[data-speed]');
+  let r, contents, paused = false;
+
+  const first = (ab) => ab.stateMachines[0] ? `sm:${ab.stateMachines[0].name}` : (ab.animations[0] ? `an:${ab.animations[0]}` : '');
+  function load(artboard, mode) {
+    if (r) r.cleanup();
+    paused = false; playBtn.textContent = 'Pause'; stateBox.textContent = '';
+    const [kind, name] = mode ? [mode.slice(0, 2), mode.slice(3)] : [];
+    r = new rive.Rive({
+      src: `rive/${file}`, canvas, autoplay: true, artboard,
+      stateMachines: kind === 'sm' ? name : undefined,
+      animations: kind === 'an' ? name : undefined,
+      layout: new rive.Layout({ fit: rive.Fit.Contain, alignment: rive.Alignment.Center }),
+      onLoad() {
+        r.resizeDrawingSurfaceToCanvas();
+        if (!contents) { contents = r.contents; fillSelectors(); }
+        buildInputs(kind === 'sm' ? name : null);
+        r.playbackSpeed = Number(spd.value);
+      },
+      onStateChange(e) { stateBox.textContent = e.data && e.data.length ? 'state: ' + e.data.join(', ') : ''; },
+      onLoadError(e) { console.warn('Rive load error', file, e); stateBox.textContent = 'Could not load this file.'; },
+    });
+  }
+  function fillSelectors() {
+    abSel.innerHTML = contents.artboards.map((a) => `<option>${a.name}</option>`).join('');
+    abSel.hidden = contents.artboards.length < 2;
+    fillModes();
+  }
+  function fillModes() {
+    const ab = contents.artboards.find((a) => a.name === abSel.value) || contents.artboards[0];
+    modeSel.innerHTML = ab.stateMachines.map((m) => `<option value="sm:${m.name}">State machine: ${m.name}</option>`).join('')
+      + ab.animations.map((a) => `<option value="an:${a}">Animation: ${a}</option>`).join('');
+    modeSel.value = first(ab);
+    meta.textContent = `${ab.stateMachines.length} state machine(s) · ${ab.animations.length} animation(s)`;
+  }
+  function buildInputs(smName) {
+    inputsBox.innerHTML = '';
+    if (!smName) return;
+    const T = rive.StateMachineInputType;
+    (r.stateMachineInputs(smName) || []).forEach((inp) => {
+      const row = document.createElement('div'); row.className = 'inp';
+      if (inp.type === T.Trigger) {
+        row.innerHTML = `<button>${inp.name}</button>`; row.firstChild.onclick = () => inp.fire();
+      } else if (inp.type === T.Boolean) {
+        row.innerHTML = `<label><input type="checkbox"> ${inp.name}</label>`;
+        const c = row.querySelector('input'); c.checked = !!inp.value; c.onchange = () => { inp.value = c.checked; };
+      } else {
+        row.innerHTML = `<label>${inp.name} <input type="range" min="0" max="100" step="1"><output></output></label>`;
+        const c = row.querySelector('input'), o = row.querySelector('output');
+        c.value = inp.value; o.textContent = inp.value;
+        c.oninput = () => { inp.value = Number(c.value); o.textContent = c.value; };
+      }
+      inputsBox.append(row);
+    });
+    if (!inputsBox.children.length) inputsBox.innerHTML = '<span class="none">No inputs to control.</span>';
+  }
+
+  abSel.onchange = () => { fillModes(); load(abSel.value, modeSel.value); };
+  modeSel.onchange = () => load(abSel.value, modeSel.value);
+  $('[data-replay]').onclick = () => load(abSel.value || undefined, modeSel.value || undefined);
+  playBtn.onclick = () => { paused = !paused; paused ? r.pause() : r.play(); playBtn.textContent = paused ? 'Play' : 'Pause'; };
+  spd.oninput = () => { $('output').textContent = spd.value + '×'; if (r) r.playbackSpeed = Number(spd.value); };
+
+  load();
+  new ResizeObserver(() => r && r.resizeDrawingSurfaceToCanvas()).observe(canvas);
+  return el;
+}
+
+GROUPS.forEach(g => {
+  const h = document.createElement('h2'); h.textContent = g.title;
+  const grid = document.createElement('div'); grid.className = 'grid';
+  g.items.forEach(([f, l]) => grid.append(card(f, l)));
+  root.append(h, grid);
+});
+</script>
+</body>
+</html>
