@@ -321,9 +321,23 @@
   ];
   const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   const mix = (a, b, k) => [0, 1, 2].map((n) => Math.round(a[n] + (b[n] - a[n]) * k));
-  // Piano-key palette, pushed brighter and more saturated: red, orange, amber, yellow,
-  // pink, violet and indigo. Each pair is one key colour fading into a neighbouring key.
-  const KEYS = [[236, 64, 72], [247, 118, 46], [250, 164, 28], [248, 204, 40], [242, 104, 160], [162, 82, 226], [86, 92, 246]];
+  // Icon colours come from the project thumbnails' bokeh palettes (bokeh.js): every hue of every project, keeping the
+  // vivid ones, one per hue family, ordered around the colour wheel. Falls back to the old piano-key colours.
+  const FALLBACK = [[236, 64, 72], [247, 118, 46], [250, 164, 28], [248, 204, 40], [242, 104, 160], [162, 82, 226], [86, 92, 246]];
+  const fromBokeh = () => {
+    const H = window.Bokeh && window.Bokeh.HUES; if (!H) return null;
+    const out = [];
+    for (const hex of Object.values(H).flat()) {
+      const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)), mx = Math.max(...c), mn = Math.min(...c), d = mx - mn, l = (mx + mn) / 510;
+      if (d === 0 || l < 0.35 || l > 0.82 || d / (255 * (1 - Math.abs(2 * l - 1))) < 0.5) continue;   // skip pale or dull colours
+      const hue = (mx === c[0] ? ((c[1] - c[2]) / d + 6) % 6 : mx === c[1] ? (c[2] - c[0]) / d + 2 : (c[0] - c[1]) / d + 4) * 60;
+      if (!out.some((o) => Math.min(Math.abs(o.hue - hue), 360 - Math.abs(o.hue - hue)) < 14)) out.push({ hue, c });
+    }
+    out.sort((a, b) => a.hue - b.hue);
+    if (out.length < 4) return null;
+    return Array.from({ length: 7 }, (_, k) => out[Math.floor((k * out.length) / 7)].c);   // 7 evenly spread around the list
+  };
+  const KEYS = fromBokeh() || FALLBACK;
   const PALETTE = KEYS.map((c, k) => [c, mix(c, KEYS[(k + 1) % KEYS.length], 0.45)]);
   // Neighbours never share a colour: (3i + 5j) mod 7 differs for every dot touching another
   // (left/right, up/down and diagonals). The shuffle
