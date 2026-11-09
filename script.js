@@ -993,3 +993,14 @@ renderProjects(state.order);
 buildWall();
 applyVariant(state.v);
 requestAnimationFrame(() => root.classList.add('loaded'));
+
+/* mobile hamburger for the masthead nav */
+(function () {
+  var btn = document.querySelector('.mast-menu'), nav = document.getElementById('mast-nav');
+  if (!btn || !nav) return;
+  function set(open) { btn.setAttribute('aria-expanded', open ? 'true' : 'false'); nav.classList.toggle('is-open', open); }
+  btn.addEventListener('click', function (e) { e.stopPropagation(); set(btn.getAttribute('aria-expanded') !== 'true'); });
+  nav.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+  document.addEventListener('click', function (e) { if (!nav.contains(e.target)) set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+})();

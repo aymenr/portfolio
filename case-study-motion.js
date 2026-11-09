@@ -128,6 +128,8 @@
           s.setAttribute('aria-current', k === i ? 'step' : 'false');
           if (reduce && k === i) s.classList.add('is-on');
         });
+        var on = steps[i], box = on && on.parentNode;
+        if (box && box.scrollWidth > box.clientWidth) box.scrollTo({ left: on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' });
         cur = i;
       }
       /* a quick "press" on the screen, then the next one slides in (the live screens animate themselves) */

@@ -180,7 +180,7 @@ ul { list-style: none; }
    .reveal.pre  = waiting below the fold; .in = revealed
    Variants can change --reveal-from to give each style its own entrance.
    ========================================================================== */
-.reveal { transition: opacity .8s var(--ease), transform .8s var(--ease), clip-path .9s var(--ease); transition-delay: calc(var(--i, 0) % 4 * 90ms); }
+.reveal { transition: opacity .4s var(--ease), transform .4s var(--ease), clip-path .45s var(--ease); transition-delay: calc(var(--i, 0) % 4 * 40ms); }
 .reveal.pre { opacity: 0; transform: var(--reveal-from, translateY(28px)); }
 
 /* hand-drawn paths draw themselves in (pathLength=1 set by script.js) */

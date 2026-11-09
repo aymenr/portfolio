@@ -6,12 +6,12 @@
   --ink: #031638; --mut: rgba(5, 31, 78, .7); --line: #cdd2dc; --soft: #f3f4f7;
   --blue: #1d2eb5; --blue-bg: #eef0fc; --green: #2fb54f; --green-bg: #eef8ef; --green-solid: #b0e6b5;
   --red: #c4161c; --red-bg: #fdf1ef; --purple: #9900cc;
-  position: relative; width: 100%; aspect-ratio: 1000 / 900; overflow: hidden; border-radius: 8px; background: #fcfcfd center / cover no-repeat;
+  position: relative; width: 100%; aspect-ratio: 1000 / 900; overflow: hidden; border-radius: 12px; isolation: isolate; background: #fcfcfd center / cover no-repeat;
   box-shadow: 0 10px 24px rgba(80, 50, 140, .2); font-family: 'Open Sans', system-ui, sans-serif; color: var(--ink);
   -webkit-font-smoothing: antialiased; contain: layout paint; user-select: none;
 }
 .cs-step-media .lb-live, .cs-vids .lb-live { display: block; }
-.lb-stage { position: absolute; left: 0; top: 0; width: 1000px; height: 900px; transform-origin: 0 0; transform: scale(var(--s, .56)); background: #fcfcfd; opacity: 1; transition: opacity .55s ease; overflow: hidden; }
+.lb-stage { position: absolute; left: 0; top: 0; width: 1000px; height: 900px; transform-origin: 0 0; transform: scale(var(--s, .56)); background: #fcfcfd; border-radius: calc(12px / var(--s, .56)); opacity: 1; transition: opacity .55s ease; overflow: hidden; }
 .lb-body { position: absolute; inset: 0; }
 .lb-stage.out { opacity: 0; }
 .lb-live:not([data-ready]) .lb-stage { visibility: hidden; }
@@ -301,9 +301,10 @@
 
 @media (prefers-reduced-motion: reduce) { .lb-cur { display: none; } }
 
-/* phones: the card scrolls sideways like the old videos did, so keep each screen at a readable width */
+/* phones: each screen scales down to fit its card (the stage rescales itself) instead of scrolling sideways and clipping */
 @media (max-width: 760px) {
-  .cs-step-media .lb-live { width: 560px; max-width: none; flex: none; scroll-snap-align: start; }
+  .cs-step-media .lb-live, .cs-vids .lb-live { border-radius: 12px; clip-path: inset(0 round 12px); -webkit-clip-path: inset(0 round 12px); }
+  .cs-step-media .lb-live { width: 100%; max-width: 100%; flex: none; box-shadow: none; }
   .cs-vids .lb-live { width: 100%; }
 }
 .lb-live[data-ready] { background-image: none !important; }

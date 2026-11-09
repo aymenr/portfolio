@@ -209,6 +209,8 @@
         b.classList.toggle('is-on', k === i); b.classList.toggle('is-done', k < i);
         b.setAttribute('aria-current', k === i ? 'step' : 'false');
       });
+      var li = btns[i].parentNode, box = li && li.parentNode;
+      if (box && box.scrollWidth > box.clientWidth) box.scrollTo({ left: li.offsetLeft - (box.clientWidth - li.offsetWidth) / 2, behavior: 'smooth' });
       phones[i].play(function () { show((i + 1) % phones.length); });
     }
     set.appendChild(stage); set.appendChild(ol); host.appendChild(set);

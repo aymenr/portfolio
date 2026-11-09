@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-cs-motion data-mo-scope="metrics"data-v="alice" data-order="work" data-motion="on" data-display="masonry">
+<html lang="en" data-cs-page="lingobites" data-cs-motion data-mo-scope="metrics"data-v="alice" data-order="work" data-motion="on" data-display="masonry">
 <head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-G1F8EQXXEJ"></script>
@@ -20,8 +20,8 @@
   <link rel="stylesheet" href="base.css">
   <link rel="stylesheet" href="variants/alice.css">
   <link rel="stylesheet" href="photos.css">
-  <link rel="stylesheet" href="case-study.css?v=60">
-  <link rel="stylesheet" href="case-study-motion.css?v=13">
+  <link rel="stylesheet" href="case-study.css?v=102">
+  <link rel="stylesheet" href="case-study-motion.css?v=21">
 </head>
 <body class="cs-roomy">
   <div class="page">
@@ -277,7 +277,7 @@
     </section>
 
     <article class="cs-block">
-      <div class="cs-shots cs-vids"><figure><video class="cs-loop" src="videos/lingobites/feedback-tiers.mp4" poster="videos/lingobites/feedback-tiers.webp" muted loop playsinline preload="none" aria-label="Tiered score for the whole activity"></video><figcaption>Tiered score for the whole activity</figcaption></figure><figure><video class="cs-loop" src="videos/lingobites/feedback-breakdown.mp4" poster="videos/lingobites/feedback-breakdown.webp" muted loop playsinline preload="none" aria-label="Score by section compared with your own average"></video><figcaption>Breakdown by section, with recommendations</figcaption></figure></div>
+      <div class="cs-shots cs-vids cs-vids-stack"><figure><video class="cs-loop" src="videos/lingobites/feedback-tiers.mp4" poster="videos/lingobites/feedback-tiers.webp" muted loop playsinline preload="none" aria-label="Tiered score for the whole activity"></video><figcaption>Tiered score for the whole activity</figcaption></figure><figure><video class="cs-loop" src="videos/lingobites/feedback-breakdown.mp4" poster="videos/lingobites/feedback-breakdown.webp" muted loop playsinline preload="none" aria-label="Score by section compared with your own average"></video><figcaption>Breakdown by section, with recommendations</figcaption></figure></div>
       <div class="cs-block-text">
         <h3><span>2</span> Scores that drive repetition</h3>
         <p><b>Hypothesis:</b> Tiered scoring makes performance easier to understand and motivates learners to improve, as advancing from one tier to another (e.g., 1 star to 2 stars) is easy to understand.</p>
@@ -364,21 +364,7 @@
   </div>
 
   <script src="case-study.js?v=4"></script>
-  <script>
-    /* phones: recordings are wider than the card, and the app sits in their middle, so start the swipe area centred */
-    (function () {
-      var mq = window.matchMedia('(max-width: 760px)');
-      function centre() {
-        if (!mq.matches) return;
-        document.querySelectorAll('.cs-step-media, .cs-shots-img').forEach(function (el) {
-          el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
-        });
-      }
-      window.addEventListener('load', centre);
-      if (mq.addEventListener) mq.addEventListener('change', centre);
-    })();
-  </script>
-  <script src="case-study-motion.js?v=9"></script>
+  <script src="case-study-motion.js?v=20"></script>
   <script src="bokeh.js?v=14"></script>
   <script src="analytics.js"></script>
   <script src="cs-variant.js"></script>

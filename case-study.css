@@ -192,7 +192,7 @@
 .cs-callout h4 { font-size: 1.5rem; letter-spacing: -.02em; margin-bottom: 10px; }
 .cs-persona { grid-template-columns: 84px 1fr; }
 .cs-persona img { width: 84px; margin-top: 0; }
-@media (max-width: 760px) { .cs-persona { grid-template-columns: 64px 1fr; } .cs-persona img { width: 64px; } }
+@media (max-width: 760px) { .cs-persona { grid-template-columns: 1fr; gap: 12px; } .cs-persona img { width: 64px; } }
 .cs-tag { color: var(--ink); }
 
 /* key use cases diagram: site palette (white boxes, hairlines, lavender groups with dashed purple outline) */
@@ -352,7 +352,7 @@
 .cs-car-slide { min-width: 0; } .cs-car-art { max-width: 100%; }
 
 /* ===== tablet (<= 900px): drop the label column so content gets the full width ===== */
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .cs-sec { grid-template-columns: 1fr; row-gap: 16px; padding-top: 72px; }
   .cs-label { position: static; }
   .cs-body, .cs-block-text, .cs-q-text, .cs-q-ctx { max-width: none; }
@@ -470,7 +470,7 @@
 .cs-stage .c-settings { left: 0.5%; top: 16.42%; width: 26%; }
 .cs-stage .c-trial { left: 27.15%; top: 2.69%; width: 21.7%; }
 .cs-stage .c-upgrade { left: 49.5%; top: 22.38%; width: 26.1%; }
-.cs-stage .c-sessions { left: 73.7%; top: 1.79%; width: 24.43%; }
+.cs-stage .c-sessions { left: 73.4%; top: 8%; width: 28.1%; }
 
 /* Keys: the dark image has a baked shadow margin (14/4/14/24 px at 2x), the light one doesn't. Scale the dark one up so both cards are the same size */
 .cs-blue .cs-block .cs-shots-keys figure:nth-child(2) img { width: 101.795%; max-width: none; margin: -0.25% -0.9% -1.5% -0.9%; }
@@ -523,7 +523,8 @@ html[data-motion="off"] .cs-character { animation: none; }
 /* ===== phone: collages reflow to fit instead of scrolling (hero = 2x2, concepts = overlapping stacks) ===== */
 @media (max-width: 760px) {
   .cs-blue .cs-block .cs-collage { overflow: hidden; }
-  .cs-blue .cs-block .cs-collage .cs-stage { width: 100%; aspect-ratio: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 0 2px; align-items: center; }
+  .cs-blue .cs-block .cs-collage { padding: 22px clamp(14px, 3vw, 40px) 22px; }
+  .cs-blue .cs-block .cs-collage .cs-stage { width: 100%; aspect-ratio: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 18px 6px; align-items: center; }
   .cs-blue .cs-block .cs-collage .cs-stage img { position: static; left: auto; top: auto; width: 100%; }
 
   .cs-blue .cs-block .cs-shots-collage { overflow: hidden; justify-content: center; padding: 20px 14px; }
@@ -542,7 +543,7 @@ html[data-motion="off"] .cs-character { animation: none; }
   .cs-blue .cs-block .cs-shots-keys { flex-direction: column; align-items: stretch; overflow: visible; gap: 18px; }
   .cs-blue .cs-block .cs-shots-keys figure { min-width: 0; flex: none; width: 100%; }
 }
-@media (max-width: 900px) and (min-width: 761px) { .cs-shots-5 figure { min-width: 108px; } }
+@media (max-width: 1000px) and (min-width: 761px) { .cs-shots-5 figure { min-width: 108px; } }
 
 /* Lingobites: desktop screens on the shared gradient */
 .cs-block .cs-shots-screens { grid-column: 1 / -1; width: 100%; box-sizing: border-box; gap: clamp(14px, 2.4vw, 32px); padding: 36px clamp(14px, 3vw, 40px) 28px; }
@@ -612,7 +613,7 @@ html[data-motion="off"] .cs-character { animation: none; }
 .cs-hero-stage .h-match { left: 6%; top: 7%; width: 54%; }
 .cs-hero-stage .h-card { left: 56%; top: 4%; width: 40%; }
 .cs-hero-stage .h-dlg { left: 4%; top: 44%; width: 56%; }
-@media (max-width: 900px) { .cs-hero-split { grid-template-columns: 1fr; gap: 8px; } .cs-hero-split .cs-intro { padding-block: 56px 28px; } }
+@media (max-width: 1000px) { .cs-hero-split { grid-template-columns: 1fr; gap: 8px; } .cs-hero-split .cs-intro { padding-block: 56px 28px; } }
 
 /* no hairline between a heading block and the block directly under it */
 .cs-q.cs-q-nodiv { margin-top: 36px; border-top: 0; padding-top: 0; }
@@ -707,12 +708,11 @@ html[data-motion="off"] .cs-character { animation: none; }
   .cs-hero-stage .h-choice { left: 44%; top: 49%; width: 52%; } .cs-hero-stage .h-match { left: 6%; top: 7%; width: 54%; } .cs-hero-stage .h-card { left: 56%; top: 4%; width: 40%; } .cs-hero-stage .h-dlg { left: 4%; top: 44%; width: 56%; } }
 @media (min-width: 761px) { .cs-hero-stage .cs-hero-comp { aspect-ratio: 2000 / 790; } .cs-hero-stage .h-dlg { top: 40%; } .cs-hero-stage .h-choice { top: 36%; } }
 
-/* ===== Lingobites phone: desktop recordings keep a readable size and swipe sideways (same approach as the Lingoda page) ===== */
+/* ===== Lingobites phone ===== */
 @media (max-width: 760px) {
-  /* step / feature cards: the recording is wider than the card; swipe to see it all */
-  .cs-step-media { overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; -webkit-overflow-scrolling: touch; margin: 0 -4px; padding: 4px 4px 14px; }
-  .cs-step-media::-webkit-scrollbar { display: none; }
-  .cs-step-media video { width: 560px; max-width: none; scroll-snap-align: start; }
+  /* step / feature cards: the recording fits the card, so all four rounded corners stay visible */
+  .cs-step-media { margin: 0; padding: 4px 0 14px; }
+  .cs-step-media video { width: 100%; max-width: 100%; }
   .cs-step { padding: 20px 16px 8px; gap: 14px; }
   /* recording panels: one screen at a time, swipe for the next */
   .cs-block .cs-shots.cs-vids, .cs-block .cs-shots.cs-vids.cs-vids-3, .cs-block .cs-shots.cs-vids.cs-vids-1 { display: flex; justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; gap: 14px; padding: 16px 14px 18px; -webkit-overflow-scrolling: touch; }
@@ -723,7 +723,7 @@ html[data-motion="off"] .cs-character { animation: none; }
 }
 
 /* tablet: step cards stack (text above, recording full width) so the recording stays readable */
-@media (max-width: 900px) { .cs-step { grid-template-columns: 1fr; gap: 16px; } .cs-step p { max-width: 60ch; } }
+@media (max-width: 1000px) { .cs-step { grid-template-columns: 1fr; gap: 16px; } .cs-step p { max-width: 60ch; } }
 
 /* Next case study link, sits above the footer */
 .cs-next { display: grid; gap: 6px; margin-top: 96px; padding: 28px 0; border-block: 1px solid color-mix(in srgb, currentColor 18%, transparent); text-decoration: none; color: inherit; }
@@ -780,3 +780,94 @@ html[data-cs-panel] .cs-status li.is-metric .cs-eyebrow { color: var(--muted); }
 
 /* Lingobites: panels that carry text (text beside the screens) get a lighter bokeh so the dark text stays readable */
 html[data-cs-project="lingobites"][data-cs-panel] :is(.cs-steps-wrap .cs-step, .cs-steps-feat .cs-step, .cs-step) { background: var(--cs-panel-text) !important; }
+
+/* phones: this pair of recordings stacks, one per row, instead of swiping */
+@media (max-width: 760px) {
+  .cs-block .cs-shots.cs-vids.cs-vids-stack { display: grid; grid-template-columns: minmax(0, 1fr); overflow: visible; gap: 22px; padding: 20px 14px 18px; }
+  .cs-vids.cs-vids-stack figure, .cs-block .cs-vids.cs-vids-stack figure:last-child:nth-child(odd):not(:only-child) { flex: none; width: 100%; grid-column: auto; }
+}
+
+/* phones: a single still image fits the panel instead of scrolling sideways */
+@media (max-width: 760px) {
+  .cs-block .cs-shots.cs-vids.cs-vids-1.cs-shots-img { overflow: visible; }
+  .cs-block .cs-shots.cs-vids.cs-vids-1.cs-shots-img figure { flex: 0 0 100%; width: 100%; min-width: 0; }
+}
+
+/* recordings: same 12px corners as every other container */
+.cs-vids video, .cs-step-media video { border-radius: 12px; }
+/* phones: these sit in sideways scrollers that clip anything outside their padding, so the big drop shadow showed up as a hard-edged band under the video; keep the shadow small enough to fit */
+@media (max-width: 760px) {
+  .cs-vids video, .cs-step-media video { box-shadow: 0 2px 8px rgba(80, 50, 140, .18); }
+  .cs-block .cs-shots.cs-vids, .cs-step-media { padding-bottom: 18px; }
+}
+
+/* phones: the sessions modal image has transparent margin, so it read smaller than the other hero cards; scale it up to match */
+@media (max-width: 760px) {
+  .cs-blue .cs-block .cs-collage .cs-stage img.c-sessions { width: 120%; max-width: none; margin-left: -10%; justify-self: stretch; }
+}
+
+/* phones: stagger the bottom row too (left card higher, right card lower) to match the top row */
+@media (max-width: 760px) {
+  .cs-blue .cs-block .cs-collage .cs-stage .live-up { align-self: start; }
+  .cs-blue .cs-block .cs-collage .cs-stage img.c-sessions { align-self: start; margin-top: 34px; }
+}
+
+/* Fluid Learn hero, Lingobites-style: the four cards overlap at different heights inside one wide panel, centred.
+   To go back to the evenly spaced row, remove the cs-hero-lb class from the hero figure in fluid-learn.html. */
+@media (min-width: 761px) {
+  .cs-blue .cs-block .cs-collage.cs-hero-lb { padding: clamp(10px, 2vw, 28px) clamp(8px, 2vw, 24px); }
+  .cs-hero-lb .cs-stage { aspect-ratio: 2000 / 760; }
+  .cs-hero-lb .cs-stage .c-settings { left: 7.2%; top: 24%; width: 26.5%; z-index: 1; }
+  .cs-hero-lb .cs-stage .c-trial { left: 30%; top: 3%; width: 22%; z-index: 2; }
+  .cs-hero-lb .cs-stage .c-upgrade { left: 47.9%; top: 32%; width: 26.5%; z-index: 3; }
+  .cs-hero-lb .cs-stage .c-sessions { left: 67.5%; top: 8%; width: 27.5%; z-index: 4; }
+}
+/* phones: the compact 2 x 2 overlapping composition, like the Lingobites hero */
+@media (max-width: 760px) {
+  .cs-blue .cs-block .cs-collage.cs-hero-lb { padding: 18px 6px 14px; }
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage { display: block; position: relative; aspect-ratio: 100 / 112; width: 100%; }
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage .c-settings,
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage .c-trial,
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage img.c-sessions,
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage .live-up.c-upgrade { position: absolute; margin: 0; max-width: none; align-self: auto; }
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage .c-settings { left: 3%; top: 7%; width: 52%; z-index: 1; }
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage .c-trial { left: 52%; top: 1%; width: 45%; z-index: 2; }
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage .live-up.c-upgrade { left: 3%; top: 53%; width: 50%; z-index: 3; }
+  .cs-blue .cs-block .cs-collage.cs-hero-lb .cs-stage img.c-sessions { left: 42%; top: 51%; width: 58%; z-index: 4; }
+}
+
+/* Before/after captions (LOGIN / HOME / VOCABULARY): darker, bigger and bolder so they read on the bokeh panel */
+.cs-shots-ba .cs-ba .cs-eyebrow { color: #0d0d0d; font-size: .9rem; font-weight: 700; letter-spacing: .08em; }
+@media (max-width: 760px) { .cs-shots-ba .cs-ba .cs-eyebrow { font-size: .72rem; letter-spacing: .05em; } }
+
+/* Lingoda app: only the question headings ("Question 1 · …", "Question 2 · …") and the Adding delight heading are primary black; the other section labels stay grey */
+html[data-cs-page="lingoda-app"] .cs-q[aria-label^="Question"] .cs-q-tag,
+html[data-cs-page="lingoda-app"] .cs-q[aria-label="Adding delight"] .cs-q-tag { color: var(--ink); }
+
+/* wide screens: the three Visual refresh screens match the size of the single screens elsewhere on the page (about 280px) */
+@media (min-width: 761px) {
+  .cs-ba { max-width: 280px; }
+}
+
+/* case-study blocks: the gap between a picture and its text is the same as the gap between that text and the next picture */
+.cs-block { row-gap: 40px; margin-top: 40px; }
+@media (max-width: 760px) { .cs-block { row-gap: 32px; margin-top: 32px; } }
+
+/* spacing tidy-ups: label to carousel 16px; wide diagram follows the picture/text scale; Fluid Learn hero sits like the Lingobites hero (28px intro padding + 8px) */
+.cs-wide { margin-top: 40px; }
+@media (max-width: 760px) { .cs-wide { margin-top: 32px; } }
+.cs-block.cs-hero-block { margin-top: 8px; }
+
+/* Lingobites: step cards under a block's text follow the same picture/text gap */
+.cs-steps.cs-steps-feat { margin-top: 40px; }
+@media (max-width: 760px) { .cs-steps.cs-steps-feat { margin-top: 32px; } }
+
+/* phones: the "Next case study" link sits 72px below the last section, like every other section gap on phones */
+@media (max-width: 760px) { .cs-next { margin-top: 72px; } }
+
+/* Lingobites: only the question headings ("Design problem 1 · …") are primary black; the other section labels stay grey */
+html[data-cs-page="lingobites"] .cs-q[aria-label^="Design problem"] .cs-q-tag { color: var(--ink); }
+
+/* the number circles beside solution titles: light purple on the two Lingoda studies (Fluid Learn keeps its blue) */
+html[data-cs-page="lingoda-app"] .cs-block h3 span,
+html[data-cs-page="lingobites"] .cs-block h3 span { background: #e9defc; color: #6a35c9; }

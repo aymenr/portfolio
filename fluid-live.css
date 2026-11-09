@@ -256,9 +256,9 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 52%, #fff 86%), linear-gradient(118deg, #05bdff 0%, #3d8ff6 34%, #8a8ff3 70%, #6070ee 100%);
   box-shadow: 0 calc(24 * var(--u)) calc(48 * var(--u)) rgba(16, 24, 40, .14); }
 .up-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 38%, rgba(214, 205, 252, .75) 62%, rgba(255, 255, 255, 0) 80%); }
-.cs-stage .live-up .up-illo { position: absolute; left: calc(202 * var(--u)); top: calc(-44 * var(--u)); width: calc(567 * var(--u)); height: auto; filter: none; }
-.up-h { position: absolute; left: 0; right: 0; top: calc(432 * var(--u)); text-align: center; font: 600 calc(38 * var(--u)) / 1.2 "Outfit", system-ui, sans-serif; color: #0c0c0c; }
-.up-s { position: absolute; left: calc(70 * var(--u)); right: calc(70 * var(--u)); top: calc(512 * var(--u)); text-align: center; font-size: calc(30 * var(--u)); line-height: 1.6; color: #1c2331; }
+.cs-stage .live-up .up-illo { position: absolute; left: calc(262 * var(--u)); top: calc(24 * var(--u)); width: calc(440 * var(--u)); height: auto; filter: none; }
+.up-h { position: absolute; left: 0; right: 0; top: calc(486 * var(--u)); text-align: center; font: 600 calc(38 * var(--u)) / 1.2 "Outfit", system-ui, sans-serif; color: #0c0c0c; }
+.up-s { position: absolute; left: calc(70 * var(--u)); right: calc(70 * var(--u)); top: calc(550 * var(--u)); text-align: center; font-size: calc(30 * var(--u)); line-height: 1.6; color: #1c2331; }
 .up-go { position: absolute; left: calc(48 * var(--u)); top: calc(690 * var(--u)); width: calc(868 * var(--u)); height: calc(88 * var(--u)); border-radius: 999px; overflow: hidden; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: calc(30 * var(--u)); background: linear-gradient(to top right, #031de5, #348dfe); }
 .up-alt { position: absolute; left: calc(48 * var(--u)); top: calc(795 * var(--u)); width: calc(868 * var(--u)); height: calc(86 * var(--u)); border-radius: 999px; border: calc(2.5 * var(--u)) solid #d0d5dd; background: #fff; display: grid; place-items: center; color: #344054; font-weight: 600; font-size: calc(30 * var(--u)); }
 .up-go .shine { animation: lv-shine 4.2s ease-in-out 1.2s infinite; }
@@ -330,6 +330,8 @@
 
 @media (max-width: 760px) {
   .cs-blue .cs-block .cs-stage .live-up { position: static; width: 100%; left: auto; top: auto; }
+  /* the collage's "every image is full width" phone rule must not reach the illustration inside the card */
+  .cs-blue .cs-block .cs-collage .cs-stage .live-up .up-illo { position: absolute; left: calc(262 * var(--u)); top: calc(24 * var(--u)); width: calc(440 * var(--u)); }
   .cs-blue .cs-block .cs-stage-limits .live-chg, .cs-blue .cs-block .cs-stage-limits .live-hrt { position: static; left: auto; top: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .live-up *, .live-chg *, .live-hrt * { animation: none !important; } }

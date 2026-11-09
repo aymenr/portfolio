@@ -56,8 +56,9 @@
 @media (max-width: 640px) {
   .mf { flex-direction: column; gap: 22px; }
   .mf-device { width: min(62vw, 240px); }
-  .mf-steps { display: flex; flex-wrap: wrap; justify-content: center; flex: none; }
-  .mf-step { width: auto; padding: 8px 12px; grid-template-columns: 24px auto; font-size: .85rem; }
+  .mf-steps, .mf[data-shape="wide"] .mf-steps { display: flex; flex-wrap: wrap; justify-content: center; flex: none; width: 100%; overflow: visible; position: relative; }
+  .mf-steps::-webkit-scrollbar { display: none; }
+  .mf-step { flex: none; width: auto; padding: 8px 12px; grid-template-columns: 24px auto; font-size: .85rem; }
   .mf-n { width: 24px; height: 24px; }
   .mf-step.is-on { translate: 0 0; }
 }
@@ -204,3 +205,10 @@
 [data-cs-motion] .cs-hero-stage .h-dlg { animation-delay: .5s, 3.1s; }
 [data-cs-motion] .cs-hero-stage .h-choice { animation-delay: .7s, 3.9s; }
 @media (prefers-reduced-motion: reduce) { [data-cs-motion] .cs-hero-stage .cs-hero-comp > img { animation: none !important; } }
+
+/* mobile: pills stay on one row while they fit; any that don't drop to the next row instead of being clipped */
+@media (max-width: 640px) {
+  .fl-pills, .fl-one .fl-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; width: 100%; overflow: visible; }
+  .fl-pills::-webkit-scrollbar { display: none; }
+  .fl-pills li, .fl-one .fl-pills li { flex: none; width: auto; white-space: nowrap; }
+}
